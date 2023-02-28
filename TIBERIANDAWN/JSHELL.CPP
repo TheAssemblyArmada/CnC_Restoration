@@ -149,8 +149,8 @@ void Fatal(char const *message, ...)
 	Prog_End();
 	vfprintf(stderr, message, va);
 	Mono_Printf(message);
-	GlyphX_Debug_Print("Fatal");
-	GlyphX_Debug_Print(message);
+	//GlyphX_Debug_Print("Fatal");
+	//GlyphX_Debug_Print(message);
 
 	if (!RunningAsDLL) {
 		exit(EXIT_FAILURE);

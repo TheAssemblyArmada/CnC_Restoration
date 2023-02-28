@@ -310,9 +310,9 @@ void MapClass::Sight_From(HouseClass *house, CELL cell, int sightrange, bool inc
 	int count;			// Counter for number of offsets to process.
 
 	// Added. ST - 3/6/2019 1:50PM
-	if ((house == NULL || house->IsHuman == false) && !ShareAllyVisibility) {
-		return;
-	}
+	//if ((house == NULL || house->IsHuman == false) && !ShareAllyVisibility) {
+	//	return;
+	//}
 
 	/*
 	**	Units that are off-map cannot sight.
@@ -1345,8 +1345,8 @@ void MapClass::Clean(void)
 						ini_name = obj->Class_Of().IniName;
 					}
 
-					sprintf_s(debug_message, sizeof(debug_message) - 1, "Cleaned %s overlapper in cell %08X. Type=%s, IniName=%s", active_fail ? "inactive" : "limbo", cell, type_text, ini_name);
-					GlyphX_Debug_Print(debug_message);
+					sprintf(debug_message, "Cleaned %s overlapper in cell %08X. Type=%s, IniName=%s", active_fail ? "inactive" : "limbo", cell, type_text, ini_name);
+					//GlyphX_Debug_Print(debug_message);
 #endif //NDEBUG					
 				}
 			}
@@ -1425,7 +1425,7 @@ ObjectClass * MapClass::Close_Object(COORDINATE coord) const
 	/*
 	** Handle aircraft selection separately, since they aren't tracked in cells while flying
 	*/
-	for (int index = 0; index < Aircraft.Count(); index++) {
+	for (index = 0; index < Aircraft.Count(); index++) {
 		AircraftClass * aircraft = Aircraft.Ptr(index);
 
 		if (aircraft->In_Which_Layer() != LAYER_GROUND) {

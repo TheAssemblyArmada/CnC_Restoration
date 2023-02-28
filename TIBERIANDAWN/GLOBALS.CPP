@@ -88,7 +88,7 @@ char OverridePath[128]=".";
 /***************************************************************************
 **	This tracks all selected objects per house (for this map).
 */
-SelectedObjectsType CurrentObject;
+DynamicVectorClass<ObjectClass *> CurrentObject;
 
 
 /***************************************************************************

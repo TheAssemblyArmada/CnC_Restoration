@@ -102,7 +102,7 @@
 /*
 ** New sidebar for GlyphX multiplayer. ST - 3/26/2019 12:24PM
 */
-#include "SidebarGlyphx.h"
+//#include "SidebarGlyphx.h"
 #include "defines.h"
 
 
@@ -877,7 +877,7 @@ void HouseClass::Init(void)
 
 
 // Object selection list is switched with player context for GlyphX. ST - 4/17/2019 9:42AM
-extern void Logic_Switch_Player_Context(HouseClass *house);
+//extern void Logic_Switch_Player_Context(HouseClass *house);
 
 /***********************************************************************************************
  * HouseClass::AI -- Process house logic.                                                      *
@@ -896,15 +896,15 @@ extern void Logic_Switch_Player_Context(HouseClass *house);
  *   12/27/1994 JLB : Created.                                                                 *
  *   07/17/1995 JLB : Limits EVA speaking unless the player can do something.                  *
  *=============================================================================================*/
-extern void Recalculate_Placement_Distances();
-extern void On_Message(const char* message, float timeout_seconds, long long message_id);
+//extern void Recalculate_Placement_Distances();
+//extern void On_Message(const char* message, float timeout_seconds, long message_id);
 
 void HouseClass::AI(void)
 {
 	Validate();
 
 	// Set PlayerPtr to be this house. Not really keen on this solution but it means I have to make fewer code changes to the original code. ST - 4/17/2019 4:32PM
-	Logic_Switch_Player_Context(this);
+	//Logic_Switch_Player_Context(this);
 
 	/*
 	**	Reset the scan accumulation bits for the next logic pass.
@@ -1187,7 +1187,7 @@ void HouseClass::AI(void)
 			int text_id = TXT_INSUFFICIENT_FUNDS;
 			char const * text = Text_String(TXT_INSUFFICIENT_FUNDS);
 			if (text != NULL) {
-				On_Message(text, 35.0f, text_id);
+				//On_Message(text, 35.0f, text_id);
 			}
 		}
 		if (SpeakMaxedDelay.Expired() && IsMaxedOut) {
@@ -1205,7 +1205,7 @@ void HouseClass::AI(void)
 				int text_id = TXT_LOW_POWER;
 				char const * text = Text_String(TXT_LOW_POWER);
 				if (text != NULL) {
-					On_Message(text, 35.0f, text_id);
+					//On_Message(text, 35.0f, text_id);
 				}
 			}
 		}
@@ -1295,7 +1295,7 @@ void HouseClass::AI(void)
 			// Add to Glyphx multiplayer sidebar. ST - 3/22/2019 1:50PM
 			if (GameToPlay == GAME_GLYPHX_MULTIPLAYER) {
 				if (IsHuman) {
-					Sidebar_Glyphx_Add(RTTI_SPECIAL, SPC_ION_CANNON, this);
+					//Sidebar_Glyphx_Add(RTTI_SPECIAL, SPC_ION_CANNON, this);
 				}
 			} else {
 				if (this == PlayerPtr) {
@@ -1361,7 +1361,7 @@ void HouseClass::AI(void)
 			// Add to Glyphx multiplayer sidebar. ST - 3/22/2019 1:50PM
 			if (GameToPlay == GAME_GLYPHX_MULTIPLAYER) {
 				if (IsHuman) {
-					Sidebar_Glyphx_Add(RTTI_SPECIAL, SPC_NUCLEAR_BOMB, this);
+					//Sidebar_Glyphx_Add(RTTI_SPECIAL, SPC_NUCLEAR_BOMB, this);
 				}
 			} else {
 				if (this == PlayerPtr) {
@@ -1399,7 +1399,7 @@ void HouseClass::AI(void)
 			// Add to Glyphx multiplayer sidebar. ST - 3/22/2019 1:50PM
 			if (GameToPlay == GAME_GLYPHX_MULTIPLAYER) {
 				if (IsHuman) {
-					Sidebar_Glyphx_Add(RTTI_SPECIAL, SPC_AIR_STRIKE, this);
+					//Sidebar_Glyphx_Add(RTTI_SPECIAL, SPC_AIR_STRIKE, this);
 				}
 			} else {
 				if (this == PlayerPtr) {
@@ -1639,7 +1639,7 @@ void HouseClass::AI(void)
 			}
 		}
 
-		Recalculate_Placement_Distances();
+		//Recalculate_Placement_Distances();
 	}
 }
 
@@ -2379,7 +2379,7 @@ ProdFailType HouseClass::Begin_Production(RTTIType type, int id)
 		// Handle Glyphx multiplayer sidebar. ST - 3/26/2019 1:27PM
 		if (GameToPlay == GAME_GLYPHX_MULTIPLAYER) {
 			if (IsHuman) {
-				Sidebar_Glyphx_Factory_Link(*factory, type, id, this);
+				//Sidebar_Glyphx_Factory_Link(*factory, type, id, this);
 			}
 		} else {		 
 			if (PlayerPtr == this) {
@@ -2546,7 +2546,7 @@ ProdFailType HouseClass::Abandon_Production(RTTIType type)
 	// Handle Glyphx multiplayer sidebar. ST - 3/22/2019 2:01PM
 	if (GameToPlay == GAME_GLYPHX_MULTIPLAYER) {
 		if (IsHuman) {
-			Sidebar_Glyphx_Abandon_Production(type, *factory, this);
+			//Sidebar_Glyphx_Abandon_Production(type, *factory, this);
 			// Need to clear pending object here?
 		}
 	} else {
@@ -2765,7 +2765,7 @@ bool HouseClass::Place_Special_Blast(SpecialWeaponType id, CELL cell)
 	** Maybe trigger an achivement. ST - 12/2/2019 11:25AM
 	*/
 	if (IsHuman && fired && what) {
-		On_Achievement_Event(this, "SUPERWEAPON_FIRED", what);
+		//On_Achievement_Event(this, "SUPERWEAPON_FIRED", what);
 	}
 
 	return(true);
@@ -2791,7 +2791,7 @@ bool HouseClass::Place_Special_Blast(SpecialWeaponType id, CELL cell)
  * HISTORY:                                                                                    *
  *   05/18/1995 JLB : Created.                                                                 *
  *=============================================================================================*/
-extern void On_Ping(const HouseClass* player_ptr, COORDINATE coord);
+//extern void On_Ping(const HouseClass* player_ptr, COORDINATE coord);
 
 bool HouseClass::Place_Object(RTTIType type, CELL cell)
 {
@@ -2862,10 +2862,10 @@ bool HouseClass::Place_Object(RTTIType type, CELL cell)
 					*/
 					if (IsHuman) {
 						if (object_type) {
-							On_Achievement_Event(this, "UNIT_CONSTRUCTED", object_type->IniName);
+							//On_Achievement_Event(this, "UNIT_CONSTRUCTED", object_type->IniName);
 						}
 						if (pending->IsActive) {
-							On_Ping(this, pending->Center_Coord());
+							//On_Ping(this, pending->Center_Coord());
 						}
 					}
 
@@ -3980,7 +3980,7 @@ bool HouseClass::Flag_Attach(UnitClass * object, bool set_home)
 	return(false);
 }
 
-extern void On_Defeated_Message(const char* message, float timeout_seconds);
+//extern void On_Defeated_Message(const char* message, float timeout_seconds);
 
 /***************************************************************************
  * HouseClass::MPlayer_Defeated -- multiplayer; house is defeated          *
@@ -4067,7 +4067,7 @@ void HouseClass::MPlayer_Defeated(void)
 		Map.Flag_To_Redraw(false);
 
 		int timeout = 600;
-		On_Defeated_Message(txt, timeout * 60.0f / TICKS_PER_MINUTE);
+		//On_Defeated_Message(txt, timeout * 60.0f / TICKS_PER_MINUTE);
 		//Sound_Effect(VOC_INCOMING_MESSAGE);
 
 	} else {

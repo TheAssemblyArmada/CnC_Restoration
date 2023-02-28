@@ -36,8 +36,9 @@
  ;		include	<mmx.inc>
 
 
+ 		P586 ; for cpuid
 		.model	flat
-		;.686
+		pmmx ; for mmx
 
 
 		externdef	C Detect_MMX_Availability:near
@@ -55,7 +56,7 @@
 		.code
 
 externdef	C CPUType:byte
-
+externdef	C VendorID:byte
 
 
 ;*********************************************************************************************
@@ -78,13 +79,7 @@ Detect_MMX_Availability proc C
 
 		local	idflag:byte
 		local	local_cputype:byte
-
-		; MMX always available now. ST - 1/3/2019 1:31PM
-		mov	[CPUType], 5
-		mov	eax, 1
-		ret
-
-
+        
 ;assume processor is at least 386
 ;
 ;check whether AC bit in eflags can be toggled.
@@ -198,7 +193,7 @@ Detect_MMX_Availability endp
 ;*===========================================================================================*
 
 Init_MMX	proc C
-
+ifdef 0
 		mov	edi,offset NewShapeJumpTable
 		mov	ecx,offset EndNewShapeJumpTable
 		sub	ecx,edi
@@ -206,7 +201,7 @@ Init_MMX	proc C
 		mov	eax,offset Single_Line_Trans
 		mov	ebx,offset MMX_Single_Line_Trans
 		cld
-
+endif
 
 @@patch_loop:   repnz	scasd
 		jnz	@@done
@@ -273,7 +268,7 @@ MMX_Done	endp
 		align	16
 
 MMX_Single_Line_Trans proc near
-
+ifdef 0
 ;
 ; If we are doing less than 8 bytes then dont use MMX
 ;
@@ -312,7 +307,7 @@ MMX_Single_Line_Trans proc near
 		jcxz   	@@next_line
 		push	offset Single_Line_Trans_Entry
 @@next_line:	ret
-
+endif
 
 MMX_Single_Line_Trans endp
 

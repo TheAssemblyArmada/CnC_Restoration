@@ -1,18 +1,3 @@
-;
-; Copyright 2020 Electronic Arts Inc.
-;
-; TiberianDawn.DLL and RedAlert.dll and corresponding source code is free 
-; software: you can redistribute it and/or modify it under the terms of 
-; the GNU General Public License as published by the Free Software Foundation, 
-; either version 3 of the License, or (at your option) any later version.
-
-; TiberianDawn.DLL and RedAlert.dll and corresponding source code is distributed 
-; in the hope that it will be useful, but with permitted additional restrictions 
-; under Section 7 of the GPL. See the GNU General Public License in LICENSE.TXT 
-; distributed with this program. You should have received a copy of the 
-; GNU General Public License along with permitted additional restrictions 
-; with this program. If not, see [https://github.com/electronicarts/CnC_Remastered_Collection]>.
-
 ;***************************************************************************
 ;**   C O N F I D E N T I A L --- W E S T W O O D   A S S O C I A T E S   **
 ;***************************************************************************
@@ -31,23 +16,18 @@
 ;*   VVC::TOBUFFER -- Copies a virtual viewport to a linear buffer         *
 ;* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - *
 
-;IDEAL
-;P386
-;MODEL USE32 FLAT
-;LOCALS ??
-.model flat
-
+IDEAL
+P386
+MODEL USE32 FLAT
+LOCALS ??
 
 TRANSP equ 0
 
+INCLUDE "gbuffer.inc"
 
-;INCLUDE "drawbuff.inc"
-INCLUDE gbuffer.inc
+GLOBAL C Buffer_To_Buffer 		:NEAR
 
-
-;CODESEG
-.code
-
+CODESEG
 
 ;***************************************************************************
 ;* VIVC::TOBUFFER -- Copies a virtual viewport to a linear buffer          *
@@ -70,21 +50,19 @@ INCLUDE gbuffer.inc
 ;* HISTORY:                                                                *
 ;*   06/15/1994 PWG : Created.                                             *
 ;*=========================================================================*
-Buffer_To_Buffer proc C public USES ebx ecx edx esi edi this_object:DWORD, x_pixel:DWORD, y_pixel:DWORD, pixel_width:DWORD, pixel_height:DWORD, dest:DWORD, buffer_size:DWORD
-
-	;PROC	Buffer_To_Buffer C near
-	;USES	ebx,ecx,edx,esi,edi
+	PROC	Buffer_To_Buffer C near
+	USES	ebx,ecx,edx,esi,edi
 
 	;*===================================================================
 	;* define the arguements that our function takes.
 	;*===================================================================
-	;ARG	this_object:DWORD		; this is a class member function
-	;ARG	x_pixel:DWORD		; Page X pixel coordinate.
-	;ARG	y_pixel:DWORD		; Page Y pixel coordinate.
-	;ARG	pixel_width:DWORD	; Width of region in pixels.
-	;ARG	pixel_height:DWORD	; Height of region in pixels.
-	;ARG	dest:DWORD		; the buffer to copy to
-	;ARG	buffer_size:DWORD	; the size of the buffer
+	ARG	this_object:DWORD		; this is a class member function
+	ARG	x_pixel:DWORD		; Page X pixel coordinate.
+	ARG	y_pixel:DWORD		; Page Y pixel coordinate.
+	ARG	pixel_width:DWORD	; Width of region in pixels.
+	ARG	pixel_height:DWORD	; Height of region in pixels.
+	ARG	dest:DWORD		; the buffer to copy to
+	ARG	buffer_size:DWORD	; the size of the buffer
 
 	;*===================================================================
 	; Define some locals so that we can handle things quickly
@@ -95,7 +73,7 @@ Buffer_To_Buffer proc C public USES ebx ecx edx esi edi this_object:DWORD, x_pix
 	LOCAL	dest_y1 : dword
 	LOCAL	dest_ajust_width:DWORD
 	LOCAL	scr_ajust_width:DWORD
-	;LOCAL	dest_area   :  dword
+	LOCAL	dest_area   :  dword
 
 ; Clip dest Rectangle against source Window boundaries.
 
@@ -105,7 +83,7 @@ Buffer_To_Buffer proc C public USES ebx ecx edx esi edi this_object:DWORD, x_pix
 	mov  	esi , [ this_object ]	    ; get ptr to dest
 	xor 	ecx , ecx
 	xor 	edx , edx
-	mov	edi , [esi].GraphicViewPort.GVPWidth  ; get width into register
+	mov	edi , [(GraphicViewPort esi).GVPWidth]  ; get width into register
 	mov	ebx , [ x_pixel ]
 	mov	eax , [ x_pixel ]
 	add	ebx , [ pixel_width ]
@@ -118,7 +96,7 @@ Buffer_To_Buffer proc C public USES ebx ecx edx esi edi this_object:DWORD, x_pix
 	shld	ecx , eax , 1
 	shld	edx , ebx , 1
 
-	mov	edi,[esi].GraphicViewPort.GVPHeight ; get height into register
+	mov	edi,[(GraphicViewPort esi).GVPHeight] ; get height into register
 	mov	ebx , [ y_pixel ]
 	mov	eax , [ y_pixel ]
 	add	ebx , [ pixel_height ]
@@ -157,22 +135,22 @@ scr_left_ok:
 scr_bottom_ok:
 	test	dl , 0100b
 	jz	scr_right_ok
-	mov	eax , [esi].GraphicViewPort.GVPWidth  ; get width into register
+	mov	eax , [(GraphicViewPort esi).GVPWidth]  ; get width into register
 	mov	[ x1_pixel ] , eax
 scr_right_ok:
 	test	dl , 0001b
 	jz	do_blit
-	mov	eax , [esi].GraphicViewPort.GVPHeight  ; get width into register
+	mov	eax , [(GraphicViewPort esi).GVPHeight]  ; get width into register
 	mov	[ y1_pixel ] , eax
 
 do_blit:
 
        cld
 
-       mov	eax , [esi].GraphicViewPort.GVPXAdd
-       add	eax , [esi].GraphicViewPort.GVPWidth
-       add	eax , [esi].GraphicViewPort.GVPPitch
-       mov	esi , [esi].GraphicViewPort.GVPOffset
+       mov	eax , [(GraphicViewPort esi).GVPXAdd]
+       add	eax , [(GraphicViewPort esi).GVPWidth]
+       add	eax , [(GraphicViewPort esi).GVPPitch]
+       mov	esi , [(GraphicViewPort esi).GVPOffset]
 
        mov	ecx , eax
        mul	[ y_pixel ]
@@ -288,7 +266,6 @@ ENDIF
 real_out:
        ret
 
-;ENDP	Buffer_To_Buffer
-Buffer_To_Buffer endp
+ENDP	Buffer_To_Buffer
 
 END

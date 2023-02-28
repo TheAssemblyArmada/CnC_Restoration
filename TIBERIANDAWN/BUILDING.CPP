@@ -99,7 +99,7 @@
 /*
 ** New sidebar for GlyphX multiplayer. ST - 3/26/2019 12:24PM
 */
-#include "SidebarGlyphx.h"
+//#include "SidebarGlyphx.h"
 
 
 enum SAMState {
@@ -1208,7 +1208,7 @@ void BuildingClass::AI(void)
 		if (object_type) {
 			TechnoClass *saboteur = As_Techno(WhomToRepay);
 			if (saboteur && saboteur->IsActive && saboteur->House && saboteur->House->IsHuman) {
-				On_Achievement_Event(saboteur->House, "BUILDING_DESTROYED_C4", object_type->IniName);
+				//On_Achievement_Event(saboteur->House, "BUILDING_DESTROYED_C4", object_type->IniName);
 			}
 		}			
 		
@@ -1529,7 +1529,7 @@ ResultType BuildingClass::Take_Damage(int & damage, int distance, WarheadType wa
 					if (GameToPlay == GAME_NORMAL && !House->IsHuman && source && source->House && source->House->IsHuman) {
 						TechnoTypeClass const *object_type = Techno_Type_Class();
 						if (object_type) {
-							On_Achievement_Event(source->House, "ION_DESTROYS_TEMPLE", object_type->IniName);
+							//On_Achievement_Event(source->House, "ION_DESTROYS_TEMPLE", object_type->IniName);
 						}			
 					}
 
@@ -2394,7 +2394,7 @@ void BuildingClass::Update_Buildables(void)
 					if (PlayerPtr->Can_Build(i, ActLike)) {
 //						if (BuildingTypeClass::As_Reference(i).Who_Can_Build_Me(true, true, ActLike)) {
 							if (GameToPlay == GAME_GLYPHX_MULTIPLAYER) {
-								Sidebar_Glyphx_Add(RTTI_BUILDINGTYPE, i, House, buildable_via_capture);
+								//Sidebar_Glyphx_Add(RTTI_BUILDINGTYPE, i, House, buildable_via_capture);
 							} else {
 								Map.Add(RTTI_BUILDINGTYPE, i, buildable_via_capture);
 							}
@@ -2408,7 +2408,7 @@ void BuildingClass::Update_Buildables(void)
 					if (PlayerPtr->Can_Build(u, ActLike)) {
 //						if (UnitTypeClass::As_Reference(u).Who_Can_Build_Me(true, true, ActLike)) {
 							if (GameToPlay == GAME_GLYPHX_MULTIPLAYER) {
-								Sidebar_Glyphx_Add(RTTI_UNITTYPE, u, House, buildable_via_capture);
+								//Sidebar_Glyphx_Add(RTTI_UNITTYPE, u, House, buildable_via_capture);
 							} else {
 								Map.Add(RTTI_UNITTYPE, u, buildable_via_capture);
 							}
@@ -2422,7 +2422,7 @@ void BuildingClass::Update_Buildables(void)
 					if (PlayerPtr->Can_Build(f, ActLike)) {
 //						if (InfantryTypeClass::As_Reference(f).Who_Can_Build_Me(true, true, ActLike)) {
 							if (GameToPlay == GAME_GLYPHX_MULTIPLAYER) {
-								Sidebar_Glyphx_Add(RTTI_INFANTRYTYPE, f, House, buildable_via_capture);
+								//Sidebar_Glyphx_Add(RTTI_INFANTRYTYPE, f, House, buildable_via_capture);
 							} else {
 								Map.Add(RTTI_INFANTRYTYPE, f, buildable_via_capture);
 							}
@@ -2436,7 +2436,7 @@ void BuildingClass::Update_Buildables(void)
 					if (PlayerPtr->Can_Build(a, ActLike)) {
 //						if (AircraftTypeClass::As_Reference(a).Who_Can_Build_Me(true, true, ActLike)) {
 							if (GameToPlay == GAME_GLYPHX_MULTIPLAYER) {
-								Sidebar_Glyphx_Add(RTTI_AIRCRAFTTYPE, a, House, buildable_via_capture);
+								//Sidebar_Glyphx_Add(RTTI_AIRCRAFTTYPE, a, House, buildable_via_capture);
 							} else {
 								Map.Add(RTTI_AIRCRAFTTYPE, a, buildable_via_capture);
 							}
@@ -3363,7 +3363,7 @@ static bool Occupy_List_Contains(const short * list, short cell)
 
 COORDINATE BuildingClass::Target_Coord(void) const
 {
-	static constexpr int _num_facings = 3;
+	static const int _num_facings = 3;
 	static const FacingType _facings[_num_facings] = { FACING_S, FACING_E, FACING_SE };
 	static const COORDINATE _offsets[_num_facings] = { 0x00800000, 0x00000080, 0x00800080 };
 
@@ -3546,9 +3546,9 @@ bool BuildingClass::Captured(HouseClass * newowner)
 			TechnoTypeClass const *object_type = Techno_Type_Class();
 			if (object_type) {
 				if (newowner->ActLike != House->ActLike) {
-					On_Achievement_Event(newowner, "OPPOSING_BUILDING_CAPTURED", object_type->IniName);
+					//On_Achievement_Event(newowner, "OPPOSING_BUILDING_CAPTURED", object_type->IniName);
 				} else {
-					On_Achievement_Event(newowner, "BUILDING_CAPTURED", object_type->IniName);
+					//On_Achievement_Event(newowner, "BUILDING_CAPTURED", object_type->IniName);
 				}	
 			}
 		}

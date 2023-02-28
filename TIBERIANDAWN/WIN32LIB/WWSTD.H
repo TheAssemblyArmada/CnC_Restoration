@@ -34,16 +34,39 @@
 #ifndef WWSTD_H
 #define	WWSTD_H
 
+//
+// Win 95 includes
+//
 
-
+#ifndef WIN32
+#ifndef _WIN32 // Denzil 6/2/98 Watcom 11.0 complains without this check
+#define _WIN32
+#endif // _WIN32
+#define WIN32 1
+#define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #include <windowsx.h>
+#else
+#include <windows.h>
+#include <windowsx.h>
+#endif
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <dos.h>
 
 #ifndef IBM
 #define IBM				TRUE
 #endif
 
 #define WW_ERROR		-1
+
+#undef	NULL
+
+#ifndef NULL
+#define NULL		0L
+#define nullptr		0L
+#endif
 
 #define PRIVATE		static
 #define PUBLIC			/* Routines & data don't have a specifier */
@@ -123,6 +146,18 @@ template<class T> T MAX(T a, T b)
 		}\
 }
 
+/*
+**	The "bool" integral type was defined by the C++ comittee in
+**	November of '94. Until the compiler supports this, use the following
+**	definition.
+*/
+#if __WATCOMC__ <= 1100
+#ifndef TRUE_FALSE_DEFINED
+#define TRUE_FALSE_DEFINED
+enum {false=0,true=1};
+typedef int bool;
+#endif
+#endif
 
 /*
 **	The type of processor running on this system as

@@ -2324,7 +2324,7 @@ extern void Suspend_Audio_Thread(void);
 extern void Resume_Audio_Thread(void);
 
 //Play 
-extern void Play_Movie_GlyphX(const char * movie_name, ThemeType theme );
+//extern void Play_Movie_GlyphX(const char * movie_name, ThemeType theme );
 
 void Play_Movie(char const * name, ThemeType theme, bool clrscrn)
 {
@@ -2333,7 +2333,7 @@ void Play_Movie(char const * name, ThemeType theme, bool clrscrn)
 		return;
 	}
 
-	Play_Movie_GlyphX(name, theme);
+	//Play_Movie_GlyphX(name, theme);
 	return;
 #else
 	/*
@@ -2507,7 +2507,7 @@ void Unselect_All(void)
 		CurrentObject[0]->Unselect();
 
 		if (count_before <= CurrentObject.Count()) {
-			GlyphX_Debug_Print("Unselect_All failed to remove an object");
+			//GlyphX_Debug_Print("Unselect_All failed to remove an object");
 			CurrentObject.Delete(CurrentObject[0]);
 		}
 	}
@@ -2529,7 +2529,7 @@ void Unselect_All_Except(ObjectClass* object)
 		CurrentObject[index]->Unselect();
 
 		if (count_before <= CurrentObject.Count()) {
-			GlyphX_Debug_Print("Unselect_All failed to remove an object");
+			//GlyphX_Debug_Print("Unselect_All failed to remove an object");
 			CurrentObject.Delete(CurrentObject[index]);
 		}
 	}
@@ -2726,16 +2726,16 @@ void CC_Texture_Fill (void const *shapefile, int shapenum, int xpos, int ypos, i
 
 
 
-extern void DLL_Draw_Intercept(int shape_number, int x, int y, int width, int height, int flags, ObjectClass *object, const char *shape_file_name, char override_owner, int scale);
-extern void DLL_Draw_Pip_Intercept(const ObjectClass* object, int pip);
-extern void DLL_Draw_Line_Intercept(int x, int y, int x1, int y1, unsigned char color, int frame);
+//extern void DLL_Draw_Intercept(int shape_number, int x, int y, int width, int height, int flags, ObjectClass *object, const char *shape_file_name, char override_owner, int scale);
+//extern void DLL_Draw_Pip_Intercept(const ObjectClass* object, int pip);
+//extern void DLL_Draw_Line_Intercept(int x, int y, int x1, int y1, unsigned char color, int frame);
 
 void CC_Draw_Shape(ObjectClass *object, void const * shapefile, int shapenum, int x, int y, WindowNumberType window, ShapeFlags_Type flags, void const * fadingdata, void const * ghostdata, int scale)
 {
 	if (window == WINDOW_VIRTUAL) {
 		int width = Get_Build_Frame_Width(shapefile);
 		int height = Get_Build_Frame_Height(shapefile);
-		DLL_Draw_Intercept(shapenum, x, y, width, height, (int)flags, object, NULL, -1, scale);
+		//DLL_Draw_Intercept(shapenum, x, y, width, height, (int)flags, object, NULL, -1, scale);
 		return;
 	}
 
@@ -2748,7 +2748,7 @@ void CC_Draw_Shape(ObjectClass *object, const char *shape_file_name, void const 
 	if (window == WINDOW_VIRTUAL) {
 		int width = Get_Build_Frame_Width(shapefile);
 		int height = Get_Build_Frame_Height(shapefile);
-		DLL_Draw_Intercept(shapenum, x, y, width, height, (int)flags, object, shape_file_name, override_owner, 0x100);
+		//DLL_Draw_Intercept(shapenum, x, y, width, height, (int)flags, object, shape_file_name, override_owner, 0x100);
 		return;
 	}
 
@@ -2759,7 +2759,7 @@ void CC_Draw_Shape(ObjectClass *object, const char *shape_file_name, void const 
 void CC_Draw_Pip(ObjectClass *object, void const * shapefile, int shapenum, int x, int y, WindowNumberType window, ShapeFlags_Type flags, void const * fadingdata, void const * ghostdata)
 {
 	if (window == WINDOW_VIRTUAL) {
-		DLL_Draw_Pip_Intercept(object, shapenum);
+		//DLL_Draw_Pip_Intercept(object, shapenum);
 		return;
 	}
 
@@ -2770,7 +2770,7 @@ void CC_Draw_Pip(ObjectClass *object, void const * shapefile, int shapenum, int 
 void CC_Draw_Line(int x, int y, int x1, int y1, unsigned char color, int frame, WindowNumberType window)
 {
 	if (window == WINDOW_VIRTUAL) {
-		DLL_Draw_Line_Intercept(x, y, x1, y1, color, frame);
+		//DLL_Draw_Line_Intercept(x, y, x1, y1, color, frame);
 		return;
 	}
 
@@ -4039,10 +4039,10 @@ unsigned long Disk_Space_Available(void)
  *=============================================================================================*/
 void Validate_Error(char *name)
 {
-	GlyphX_Debug_Print("Validate_Error");
-	GlyphX_Debug_Print(name);
+	//GlyphX_Debug_Print("Validate_Error");
+	//GlyphX_Debug_Print(name);
 #ifdef CHEAT_KEYS
-	Prog_End(NULL, true);
+	Prog_End();
 	printf("%s object error!\n",name);
 	if (!RunningAsDLL) {
 		exit(0);

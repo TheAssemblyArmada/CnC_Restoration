@@ -1,18 +1,3 @@
-;
-; Copyright 2020 Electronic Arts Inc.
-;
-; TiberianDawn.DLL and RedAlert.dll and corresponding source code is free 
-; software: you can redistribute it and/or modify it under the terms of 
-; the GNU General Public License as published by the Free Software Foundation, 
-; either version 3 of the License, or (at your option) any later version.
-
-; TiberianDawn.DLL and RedAlert.dll and corresponding source code is distributed 
-; in the hope that it will be useful, but with permitted additional restrictions 
-; under Section 7 of the GPL. See the GNU General Public License in LICENSE.TXT 
-; distributed with this program. You should have received a copy of the 
-; GNU General Public License along with permitted additional restrictions 
-; with this program. If not, see [https://github.com/electronicarts/CnC_Remastered_Collection]>.
-
 ; **************************************************************************
 ; **   C O N F I D E N T I A L --- W E S T W O O D   A S S O C I A T E S   *
 ; **************************************************************************
@@ -34,7 +19,7 @@
 ; * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*
 
 ;IDEAL
-;P386
+P386
 ;MODEL USE32 FLAT
 .model flat
 
@@ -83,11 +68,11 @@ externdef C Apply_XOR_Delta_To_Page_Or_Viewport:NEAR
 ;* HISTORY:                                                                *
 ;*   05/23/1994 SKB : Created.                                             *
 ;*=========================================================================*
-Apply_XOR_Delta proc C public USES ebx ecx edx esi edi target:DWORD, delta:DWORD
-	
-	;USES 	ebx,ecx,edx,edi,esi
-	;ARG	target:DWORD 		; pointers.
-	;ARG	delta:DWORD		; pointers.
+Apply_XOR_Delta proc C near
+
+	USES 	ebx,ecx,edx,edi,esi
+	ARG	target:DWORD 		; pointers.
+	ARG	delta:DWORD		; pointers.
 
 	; Optimized for 486/pentium by rearanging instructions.
 	mov	edi,[target]		; get our pointers into offset registers.
@@ -216,14 +201,14 @@ Apply_XOR_Delta endp
 ;*=========================================================================*
 
 
-Apply_XOR_Delta_To_Page_Or_Viewport proc C public USES ebx ecx edx esi edi target:DWORD, delta:DWORD, xwidth:DWORD, nextrow:DWORD, copy:DWORD
+Apply_XOR_Delta_To_Page_Or_Viewport proc C
 
-	;USES 	ebx,ecx,edx,edi,esi
-	;ARG	target:DWORD		; pointer to the destination buffer.
-	;ARG	delta:DWORD		; pointer to the delta buffer.
-	;ARG	width:DWORD		; width of animation.
-	;ARG	nextrow:DWORD		; Page/Buffer width - anim width.
-	;ARG	copy:DWORD		; should it be copied or xor'd?
+	USES 	ebx,ecx,edx,edi,esi
+	ARG	target:DWORD		; pointer to the destination buffer.
+	ARG	delta:DWORD		; pointer to the delta buffer.
+	ARG	width:DWORD		; width of animation.
+	ARG	nextrow:DWORD		; Page/Buffer width - anim width.
+	ARG	copy:DWORD		; should it be copied or xor'd?
 
 
 	mov	edi,[target]		; Get the target pointer.
@@ -239,7 +224,7 @@ Apply_XOR_Delta_To_Page_Or_Viewport proc C public USES ebx ecx edx esi edi targe
 	mov	edx,eax			; use dx to count the relative column.
 
 	push	ebx			; push nextrow onto the stack for Copy/XOR_Delta_Buffer.
-	mov	ebx,[xwidth]		; bx will hold the max column for speed compares
+	mov	ebx,[width]		; bx will hold the max column for speed compares
 
 ; At this point, all the registers have been set up.  Now call the correct function
 ; to either copy or xor the data.
@@ -278,7 +263,9 @@ Apply_XOR_Delta_To_Page_Or_Viewport ENDP
 ;*   03/09/1992  SB : Created.                                             *
 ;*=========================================================================*
 
-XOR_Delta_Buffer proc C nextrow:DWORD
+XOR_Delta_Buffer proc C
+
+	ARG nextrow:DWORD
 
 top_loop2:
 	xor	eax,eax			; clear out eax.
@@ -400,7 +387,7 @@ stop2:
 	ret
 
 
-XOR_Delta_Buffer	ENDP	
+	ENDP	XOR_Delta_Buffer
 
 ;----------------------------------------------------------------------------
 

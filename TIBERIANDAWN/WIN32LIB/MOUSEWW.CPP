@@ -30,7 +30,7 @@
  *   WWMouseClass::WWMouseClass -- Constructor for the Mouse Class                                 *
  * - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
-#include "mouse.h"
+#include "mouseww.h"
 #include <mmsystem.h>
 
 static WWMouseClass *_Mouse=NULL;
@@ -696,24 +696,24 @@ void *Set_Mouse_Cursor(int hotx, int hoty, void *cursor)
 	return(_Mouse->Set_Cursor(hotx,hoty,cursor));
 }
 
-extern int DLLForceMouseX;
-extern int DLLForceMouseY;
+//extern int DLLForceMouseX;
+//extern int DLLForceMouseY;
 
 
 int Get_Mouse_X(void)
 {
-	if (DLLForceMouseX >= 0) {
-		return DLLForceMouseX;
-	}
+	//if (DLLForceMouseX >= 0) {
+	//	return DLLForceMouseX;
+	//}
 	if (!_Mouse) return(0);
 	return(_Mouse->Get_Mouse_X());
 }
 
 int Get_Mouse_Y(void)
 {
-	if (DLLForceMouseY >= 0) {
-		return DLLForceMouseY;
-	}
+	//if (DLLForceMouseY >= 0) {
+	//	return DLLForceMouseY;
+	//}
 	
 	if (!_Mouse) return(0);
 	return(_Mouse->Get_Mouse_Y());

@@ -157,8 +157,7 @@ extern TFixedIHeapClass<HouseClass>							Houses;
 extern QueueClass<EventClass, MAX_EVENTS>					OutList;
 extern QueueClass<EventClass, (MAX_EVENTS * 8)>			DoList;
 
-typedef DynamicVectorArrayClass<ObjectClass *, HOUSE_COUNT, HOUSE_FIRST> SelectedObjectsType;
-extern SelectedObjectsType								CurrentObject;
+extern DynamicVectorClass<ObjectClass *>				CurrentObject;
 extern DynamicVectorClass<TriggerClass *> 				CellTriggers;
 extern DynamicVectorClass<TriggerClass *> 				HouseTriggers[HOUSE_COUNT];
 

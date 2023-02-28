@@ -229,17 +229,8 @@ public:		//ST - 1/21/2019 12:06PM
 		virtual int Clicked_On(KeyNumType & key, unsigned flags, int x, int y);
 };
 
-//inline GadgetClass::FlagEnum operator |(GadgetClass::FlagEnum, GadgetClass::FlagEnum);
-//inline GadgetClass::FlagEnum operator &(GadgetClass::FlagEnum, GadgetClass::FlagEnum);
-//inline GadgetClass::FlagEnum operator ~(GadgetClass::FlagEnum);
-
-inline GadgetClass::FlagEnum operator|(GadgetClass::FlagEnum a, GadgetClass::FlagEnum b)
-{return static_cast<GadgetClass::FlagEnum>(static_cast<int>(a) | static_cast<int>(b));}
-
-inline GadgetClass::FlagEnum operator&(GadgetClass::FlagEnum a, GadgetClass::FlagEnum b)
-{return static_cast<GadgetClass::FlagEnum>(static_cast<int>(a) & static_cast<int>(b));}
-
-inline GadgetClass::FlagEnum operator~(GadgetClass::FlagEnum a)
-{return static_cast<GadgetClass::FlagEnum>(~static_cast<int>(a));}
+inline GadgetClass::FlagEnum operator |(GadgetClass::FlagEnum, GadgetClass::FlagEnum);
+inline GadgetClass::FlagEnum operator &(GadgetClass::FlagEnum, GadgetClass::FlagEnum);
+inline GadgetClass::FlagEnum operator ~(GadgetClass::FlagEnum);
 
 #endif

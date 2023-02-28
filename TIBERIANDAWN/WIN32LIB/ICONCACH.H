@@ -1,18 +1,3 @@
-//
-// Copyright 2020 Electronic Arts Inc.
-//
-// TiberianDawn.DLL and RedAlert.dll and corresponding source code is free 
-// software: you can redistribute it and/or modify it under the terms of 
-// the GNU General Public License as published by the Free Software Foundation, 
-// either version 3 of the License, or (at your option) any later version.
-
-// TiberianDawn.DLL and RedAlert.dll and corresponding source code is distributed 
-// in the hope that it will be useful, but with permitted additional restrictions 
-// under Section 7 of the GPL. See the GNU General Public License in LICENSE.TXT 
-// distributed with this program. You should have received a copy of the 
-// GNU General Public License along with permitted additional restrictions 
-// with this program. If not, see https://github.com/electronicarts/CnC_Remastered_Collection
-
 /***********************************************************************************************
  ***             C O N F I D E N T I A L  ---  W E S T W O O D   S T U D I O S               ***
  ***********************************************************************************************
@@ -42,6 +27,9 @@
 #define	ICONCACH_H
 
 #include	<tile.h>
+#include	"wwstd.h"
+#define WIN32_LEAN_AND_MEAN
+#include <ddraw.h>
 
 #define	ICON_WIDTH			24			// Icons must be this width to be cached
 #define	ICON_HEIGHT			24			// Icons must be this height to be cached
@@ -110,13 +98,13 @@ extern void Register_Icon_Set (void *icon_data , BOOL pre_cache);
 //
 // Prototypes for assembly language procedures in STMPCACH.ASM
 //
-extern "C" void Clear_Icon_Pointers (void);
+extern "C" void __cdecl Clear_Icon_Pointers (void);
 extern "C" void Cache_Copy_Icon (void const *icon_ptr ,void * , int);
 extern "C" int Is_Icon_Cached (void const *icon_data , int icon);
-extern "C" int Get_Icon_Index (void *icon_ptr);
-extern "C" int Get_Free_Index (void);
-extern "C" BOOL Cache_New_Icon (int icon_index, void *icon_ptr);
-extern "C" int Get_Free_Cache_Slot(void);
+extern "C" int __cdecl Get_Icon_Index (void *icon_ptr);
+extern "C" int __cdecl Get_Free_Index (void);
+extern "C" BOOL _cdecl Cache_New_Icon (int icon_index, void *icon_ptr);
+extern "C" int __cdecl Get_Free_Cache_Slot(void);
 
 
 extern	int	CachedIconsDrawn;

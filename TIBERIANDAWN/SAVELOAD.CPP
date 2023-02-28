@@ -46,8 +46,8 @@
 
 #include	"function.h"
 
-extern bool DLLSave(FileClass &file);
-extern bool DLLLoad(FileClass &file);
+//extern bool DLLSave(FileClass &file);
+//extern bool DLLLoad(FileClass &file);
 
 		
 /*
@@ -170,13 +170,13 @@ bool Save_Game(const char *file_name, const char *descr)
 	/*
 	** Save the DLLs variables first, so we can do a version check in the DLL when we begin the load
 	*/
-	if (RunningAsDLL) {
-		if (!DLLSave(file)) {
-			file.Close();
-			Decode_All_Pointers();
-			return false;
-		}
-	}
+	//if (RunningAsDLL) {
+	//	if (!DLLSave(file)) {
+	//		file.Close();
+	//		Decode_All_Pointers();
+	//		return false;
+	//	}
+	//}
 
 	/*
 	**	Save the description, scenario #, and house
@@ -378,12 +378,12 @@ bool Load_Game(const char *file_name)
 	/*
 	** Load the DLLs variables first, in case we need to do something different based on version
 	*/
-	if (RunningAsDLL) {
-		if (!DLLLoad(file)) {
-			file.Close();
-			return false;
-		}
-	}
+	//if (RunningAsDLL) {
+	//	if (!DLLLoad(file)) {
+	//		file.Close();
+	//		return false;
+	//	}
+	//}
 
 	/*
 	**	Read & discard the save-game's header info
@@ -454,7 +454,7 @@ bool Load_Game(const char *file_name)
 		}
 	}
 	if(!Force_CD_Available(RequiredCD)) {
-		Prog_End("Load_Game - CD not found", true);
+		Prog_End();
 		if (!RunningAsDLL) {
 			exit(EXIT_FAILURE);
 		}
@@ -544,7 +544,7 @@ bool Load_Game(const char *file_name)
 	/*
 	** Fixup remap tables. ST - 2/28/2020 1:50PM
 	*/
-	for (HousesType house = HOUSE_MULTI1; house < HOUSE_COUNT; house++) {
+	for (house = HOUSE_MULTI1; house < HOUSE_COUNT; house++) {
 		HouseClass * hptr = HouseClass::As_Pointer(house);
 		if (hptr && hptr->IsActive) {
 			hptr->Init_Data(hptr->RemapColor, hptr->ActLike, hptr->Credits);
@@ -554,7 +554,7 @@ bool Load_Game(const char *file_name)
 	/*
 	** Re-init unit trackers. They will be garbage pointers after the load
 	*/
-	for (HousesType house = HOUSE_FIRST; house < HOUSE_COUNT; house++) {
+	for (house = HOUSE_FIRST; house < HOUSE_COUNT; house++) {
 		HouseClass * hptr = HouseClass::As_Pointer(house);
 		if (hptr && hptr->IsActive) {
 			hptr->Init_Unit_Trackers();
@@ -630,23 +630,23 @@ bool Save_Misc_Values(FileClass &file)
 	**	Save currently-selected objects list.
 	**	Save the # of ptrs in the list.
 	*/
-	for (i = 0; i < SelectedObjectsType::COUNT; i++) {
-		DynamicVectorClass<ObjectClass *>& selection = CurrentObject.Raw(i);
-		count = selection.Count();
-		if (file.Write(&count, sizeof(count)) != sizeof(count)) {
-			return(false);
-		}
-
-		/*
-		**	Save the pointers.
-		*/
-		for (j = 0; j < count; j++) {
-			ptr = selection[j];
-			if (file.Write(&ptr, sizeof(ptr)) != sizeof(ptr)) {
-				return(false);
-			}
-		}
-	}
+	//for (i = 0; i < SelectedObjectsType::COUNT; i++) {
+	//	DynamicVectorClass<ObjectClass *>& selection = CurrentObject.Raw(i);
+	//	count = selection.Count();
+	//	if (file.Write(&count, sizeof(count)) != sizeof(count)) {
+	//		return(false);
+	//	}
+    //
+	//	/*
+	//	**	Save the pointers.
+	//	*/
+	//	for (j = 0; j < count; j++) {
+	//		ptr = selection[j];
+	//		if (file.Write(&ptr, sizeof(ptr)) != sizeof(ptr)) {
+	//			return(false);
+	//		}
+	//	}
+	//}
 
 	/*
 	**	Save the list of waypoints.
@@ -722,26 +722,26 @@ bool Load_Misc_Values(FileClass &file)
 		return(false);
 	}
 
-	for (i = 0; i < SelectedObjectsType::COUNT; i++) {
+	//for (i = 0; i < SelectedObjectsType::COUNT; i++) {
 		/*
 		**	Load currently-selected objects list.
 		**	Load the # of ptrs in the list.
 		*/
-		DynamicVectorClass<ObjectClass *>& selection = CurrentObject.Raw(i);
-		if (file.Read(&count, sizeof(count)) != sizeof(count)) {
-			return(false);
-		}
+	//	DynamicVectorClass<ObjectClass *>& selection = CurrentObject.Raw(i);
+	//	if (file.Read(&count, sizeof(count)) != sizeof(count)) {
+	//		return(false);
+	//	}
 
 		/*
 		**	Load the pointers.
 		*/
-		for (j = 0; j < count; j++) {
-			if (file.Read(&ptr, sizeof(ptr)) != sizeof(ptr)) {
-				return(false);
-			}
-			selection.Add(ptr);	// add to the list
-		}
-	}
+	//	for (j = 0; j < count; j++) {
+	//		if (file.Read(&ptr, sizeof(ptr)) != sizeof(ptr)) {
+	//			return(false);
+	//		}
+	//		selection.Add(ptr);	// add to the list
+	//	}
+	//}
 
 	/*
 	**	Save the list of waypoints.
@@ -771,8 +771,8 @@ bool Load_Misc_Values(FileClass &file)
 /*
 ** ST - 9/26/2019 11:43AM
 */
-extern void DLL_Code_Pointers(void);
-extern void DLL_Decode_Pointers(void);
+//extern void DLL_Code_Pointers(void);
+//extern void DLL_Decode_Pointers(void);
 
 
 /***********************************************************************************************
@@ -840,17 +840,17 @@ void Code_All_Pointers(void)
 	/*
 	**	Currently-selected objects.
 	*/
-	for (i = 0; i < SelectedObjectsType::COUNT; i++) {
-		DynamicVectorClass<ObjectClass *>& selection = CurrentObject.Raw(i);
-		for (j = 0; j < selection.Count(); j++) {
-			selection[j] = (ObjectClass *)selection[j]->As_Target();
-		}
-	}
+	//for (i = 0; i < SelectedObjectsType::COUNT; i++) {
+	//	DynamicVectorClass<ObjectClass *>& selection = CurrentObject.Raw(i);
+	//	for (j = 0; j < selection.Count(); j++) {
+	//		selection[j] = (ObjectClass *)selection[j]->As_Target();
+	//	}
+	//}
 
 	/*
 	** DLL data
 	*/
-	DLL_Code_Pointers();
+	//DLL_Code_Pointers();
 
 	/*
 	** Houses must be coded last, because the Class->House member of the HouseClass
@@ -891,7 +891,7 @@ void Decode_All_Pointers(void)
 	/*
 	** DLL data
 	*/
-	DLL_Decode_Pointers();
+	//DLL_Decode_Pointers();
 
 	/*
 	**	The ArrayOf's.
@@ -957,15 +957,15 @@ void Decode_All_Pointers(void)
 	/*
 	**	Currently-selected objects.
 	*/
-	for (i = 0; i < SelectedObjectsType::COUNT; i++) {
-		DynamicVectorClass<ObjectClass *>& selection = CurrentObject.Raw(i);
-		for (j = 0; j < selection.Count(); j++) {
-			unsigned long target_as_object_ptr = reinterpret_cast<unsigned long>(selection[j]);
-			TARGET target = (TARGET)target_as_object_ptr;
-			selection[j] = As_Object(target);
-			Check_Ptr(selection[j],__FILE__,__LINE__);
-		}
-	}
+	//for (i = 0; i < SelectedObjectsType::COUNT; i++) {
+	//	DynamicVectorClass<ObjectClass *>& selection = CurrentObject.Raw(i);
+	//	for (j = 0; j < selection.Count(); j++) {
+	//		unsigned long target_as_object_ptr = reinterpret_cast<unsigned long>(selection[j]);
+	//		TARGET target = (TARGET)target_as_object_ptr;
+	//		selection[j] = As_Object(target);
+	//		Check_Ptr(selection[j],__FILE__,__LINE__);
+	//	}
+	//}
 
 	/*
 	**	Last-Minute Fixups; to resolve these pointers properly requires all other
@@ -1018,7 +1018,7 @@ bool Read_Object(void *ptr, int class_size, FileClass & file, bool has_vtable)
 	}
 	
 	int vtable_adjust = has_vtable ? 4 : 0;
-	unsigned char *object_ptr = static_cast<unsigned char *>(ptr);
+	unsigned char *object_ptr = (unsigned char *)(ptr);
 
 	if (has_vtable) {
 		/*

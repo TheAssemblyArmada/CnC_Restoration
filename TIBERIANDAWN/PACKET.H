@@ -39,6 +39,7 @@
 #define __PACKET_H
 
 
+#include "wwstd.h"
 #include "field.h"
 
 class PacketClass {

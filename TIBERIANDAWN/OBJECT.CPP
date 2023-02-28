@@ -718,7 +718,7 @@ void ObjectClass::Move(FacingType facing)
 }
 
 // Object selection list is switched with player context for GlyphX. ST - 4/17/2019 9:42AM
-extern void Logic_Switch_Player_Context(ObjectClass *object);
+//extern void Logic_Switch_Player_Context(ObjectClass *object);
 
 /***********************************************************************************************
  * ObjectClass::Unselect -- This will un-select the object if it was selected.                 *
@@ -773,7 +773,7 @@ void ObjectClass::Unselect(void)
  *=============================================================================================*/
 void ObjectClass::Unselect_All_Players(void)
 {
-	CurrentObject.Delete_All(this);
+	//CurrentObject.Delete_All();
 
 	if (In_Which_Layer() == LAYER_GROUND) {
 		Mark(MARK_OVERLAP_UP);
@@ -805,7 +805,7 @@ void ObjectClass::Unselect_All_Players(void)
  *=============================================================================================*/
 void ObjectClass::Unselect_All_Players_Except_Owner(void)
 {
-	CurrentObject.Delete_All_Except(this, Owner());
+	//CurrentObject.Delete_All_Except(this, Owner());
 
 	if (In_Which_Layer() == LAYER_GROUND) {
 		Mark(MARK_OVERLAP_UP);
@@ -1581,7 +1581,7 @@ bool ObjectClass::Mark(MarkType mark)
  *=============================================================================================*/
 void ObjectClass::Init(void)
 {
-	CurrentObject.Clear_All();
+	//CurrentObject.Clear_All();
 }
 
 
@@ -1626,10 +1626,10 @@ void ObjectClass::Set_Selected_By_Player(HouseClass *player)
 
 	HousesType house = player->Class->House;
 	if (((TechnoTypeClass const &)Class_Of()).IsLeader) {
-		CurrentObject.Add_Head(house, this);
+		//CurrentObject.Add_Head(house, this);
 	}
 	else {
-		CurrentObject.Add(house, this);
+		//CurrentObject.Add(house, this);
 	}
 
 	int shift = (int)house;
@@ -1660,7 +1660,7 @@ void ObjectClass::Set_Unselected_By_Player(HouseClass *player)
 	}
 
 	HousesType house = player->Class->House;
-	CurrentObject.Delete(house, this);
+	//CurrentObject.Delete(house, this);
 
 	int shift = (int)house;
 	IsSelectedMask &= ~(1 << shift);

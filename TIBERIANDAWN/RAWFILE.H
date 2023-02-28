@@ -54,6 +54,7 @@
 #define	HANDLE_TYPE		int
 #endif
 
+#include    "wwstd.h"
 #include	"wwfile.h"
 
 #ifdef NEVER

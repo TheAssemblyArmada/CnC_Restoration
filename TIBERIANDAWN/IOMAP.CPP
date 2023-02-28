@@ -255,7 +255,7 @@ void CellClass::Decode_Pointers(void)
 			CellClass *cell0 = &Map[0];
 			int cell_number = this - cell0;
 			sprintf(bad, "Found bad cell occupier in cell %d", cell_number);
-			GlyphX_Debug_Print(bad);
+			//GlyphX_Debug_Print(bad);
 			OccupierPtr = NULL;
 		}
 	}
@@ -285,7 +285,7 @@ void CellClass::Decode_Pointers(void)
 				CellClass *cell0 = &Map[0];
 				int cell_number = this - cell0;
 				sprintf(bad, "Found bad cell overlapper in slot %d of cell %d", i, cell_number);
-				GlyphX_Debug_Print(bad);
+				//GlyphX_Debug_Print(bad);
 				Overlapper[i] = NULL;
 			}
 		}

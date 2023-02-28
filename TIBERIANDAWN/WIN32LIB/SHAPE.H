@@ -1,18 +1,3 @@
-//
-// Copyright 2020 Electronic Arts Inc.
-//
-// TiberianDawn.DLL and RedAlert.dll and corresponding source code is free 
-// software: you can redistribute it and/or modify it under the terms of 
-// the GNU General Public License as published by the Free Software Foundation, 
-// either version 3 of the License, or (at your option) any later version.
-
-// TiberianDawn.DLL and RedAlert.dll and corresponding source code is distributed 
-// in the hope that it will be useful, but with permitted additional restrictions 
-// under Section 7 of the GPL. See the GNU General Public License in LICENSE.TXT 
-// distributed with this program. You should have received a copy of the 
-// GNU General Public License along with permitted additional restrictions 
-// with this program. If not, see https://github.com/electronicarts/CnC_Remastered_Collection
-
 /***************************************************************************
  **   C O N F I D E N T I A L --- W E S T W O O D    S T U D I O S        **
  ***************************************************************************
@@ -47,14 +32,9 @@ typedef enum {
 	MAKESHAPE_VARIABLE =	0x0004	// <16-color shape
 } MakeShapeFlags_Type;
 
-inline MakeShapeFlags_Type operator|(MakeShapeFlags_Type a, MakeShapeFlags_Type b)
-{return static_cast<MakeShapeFlags_Type>(static_cast<int>(a) | static_cast<int>(b));}
-
-inline MakeShapeFlags_Type operator&(MakeShapeFlags_Type a, MakeShapeFlags_Type b)
-{return static_cast<MakeShapeFlags_Type>(static_cast<int>(a) & static_cast<int>(b));}
-
-inline MakeShapeFlags_Type operator~(MakeShapeFlags_Type a)
-{return static_cast<MakeShapeFlags_Type>(~static_cast<int>(a));}
+inline MakeShapeFlags_Type operator|(MakeShapeFlags_Type a, MakeShapeFlags_Type b);
+inline MakeShapeFlags_Type operator&(MakeShapeFlags_Type a, MakeShapeFlags_Type b);
+inline MakeShapeFlags_Type operator~(MakeShapeFlags_Type a);
 
 
 /*---------------------------------------------------------------------------
@@ -83,14 +63,9 @@ typedef enum {
 													//  (void * color_table)
 } ShapeFlags_Type;
 
-inline ShapeFlags_Type operator|(ShapeFlags_Type a, ShapeFlags_Type b)
-{return static_cast<ShapeFlags_Type>(static_cast<int>(a) | static_cast<int>(b));}
-
-inline ShapeFlags_Type operator&(ShapeFlags_Type a, ShapeFlags_Type b)
-{return static_cast<ShapeFlags_Type>(static_cast<int>(a) & static_cast<int>(b));}
-
-inline ShapeFlags_Type operator~(ShapeFlags_Type a)
-{return static_cast<ShapeFlags_Type>(~static_cast<int>(a));}
+inline ShapeFlags_Type operator|(ShapeFlags_Type a, ShapeFlags_Type b);
+inline ShapeFlags_Type operator&(ShapeFlags_Type a, ShapeFlags_Type b);
+inline ShapeFlags_Type operator~(ShapeFlags_Type a);
 
 
 /*
@@ -183,5 +158,3 @@ int  __cdecl Get_Shape_Scaled_Height(void const *shape, int scale);
 #endif // SHAPE_H
 
 /****************************** End of shape.h *****************************/
-
-

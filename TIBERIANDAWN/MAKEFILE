@@ -1,0 +1,550 @@
+#*******************************************************************************
+#*                            O P E N  S O U R C E                            **
+#*                                     --                                     **
+#*    C & C  S O U R C E  C O D E  P R E S E R V A T I O N  P R O J E C T     **
+#*******************************************************************************
+#*
+#*  @project       The C&C Source Code Preservation Project (C&C)
+#*
+#*  @file          MAKEFILE
+#*
+#*  @author        CCHyper, tomsons26
+#*
+#*  @brief         Make file for the C&C project.
+#*
+#*  @license       This project is free software: you can redistribute it and/or
+#*                 modify it under the terms of the GNU General Public License
+#*                 as published by the Free Software Foundation, either version
+#*                 3 of the License, or (at your option) any later version.
+#*
+#*                 This project is distributed in the hope that it will be
+#*                 useful, but WITHOUT ANY WARRANTY; without even the implied
+#*                 warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+#*                 PURPOSE. See the GNU General Public License for more details.
+#*
+#*                 You should have received a copy of the GNU General Public
+#*                 License along with this program.
+#*                 If not, see <http://www.gnu.org/licenses/>.
+#*
+#******************************************************************************/
+
+
+.SILENT
+.OPTIMIZE
+.ERASE
+
+
+#-------------------------------------------------------------------------------
+# NOTE: This makefile expects the following to be defined;
+#   INSTALLPATH - Path to copy the compiled binaries to.
+#   WATCOM - Path to 
+#   UTILS - Path to external build utilities.
+#   WWLIB - Path to the Westwood Library (32bit).
+#   WWIPX - Path to the Westwood IPX Library.
+#   VQLIB - Path to the VQ library.
+#   DXSDK - Path to the DirectX library.
+# 
+# Optional:
+#   JAPANESE/GERMAN/FRENCH - The language we are building for.
+#-------------------------------------------------------------------------------
+
+
+#-------------------------------------------------------------------------------
+# Working values depending on what target executable will be created.
+#-------------------------------------------------------------------------------
+!ifdef JAPANESE
+LANGUAGE=JAPANESE
+!else ifdef GERMAN
+LANGUAGE=GERMAN
+!else ifdef FRENCH
+LANGUAGE=FRENCH
+!else
+LANGUAGE=ENGLISH
+!endif
+
+
+LINKFILE=win95.lnk
+LIBLINKFILE=ww32lib.lnk
+LINKER=wlink
+# Replaced wlink with nwlink. Watcom fix allows more debug symbols in exe, so allows debugging in WD.
+#LINKER=$(%UTILS)\nwlink
+CC=$(%WATCOM)\binnt\wpp386
+LIB=$(%WATCOM)\binnt\wlib
+ASM=..\UTILS\tasm32
+WWOBJ=..\build\win32\$(LANGUAGE)\conquer
+
+
+#-------------------------------------------------------------------------------
+# Path macros: one path for each file type.
+#  These paths are used to tell make where to find/put each file type.
+#-------------------------------------------------------------------------------
+PATHS = .;WIN32LIB
+
+.asm:  $(PATHS)
+.c:    $(PATHS)
+.cpp:  $(PATHS)
+.h:    .
+.obj:  $(WWOBJ)
+.lib:  .
+.exe:  ..\run
+
+#===============================================================================
+# Compiler and assembler flags for lib
+#===============================================================================
+LIB_CFG = /d1                            # No debugging information ( else use /d1 )
+LIB_CFG += /DWIN32=1
+LIB_CFG += /D_WIN32
+LIB_CFG += /iWIN32LIB                     # Include directory.
+LIB_CFG += /i=$(%DXSDK)\inc
+LIB_CFG += /i=$(%WATCOM)\h\nt            # NT include directory.
+LIB_CFG += /i=$(%WATCOM)\H               # Normal Watcom include directory.
+LIB_CFG += /bt=NT
+LIB_CFG += /otxan
+LIB_CFG += /5r                           # Pentium optimized register calling conventions.
+#LIB_CFG += /of+                          # Generate traceable stack frames.
+LIB_CFG += /zp1                          # Pack structures on byte boundary.
+LIB_CFG += /s                            # Remove stack check calls.
+LIB_CFG += /j                            # char is now signed.
+#LIB_CFG += /we                           # Treat all warnings as errors.
+LIB_CFG += /w8                           # Most warnings enabled.
+LIB_CFG += /ri                           # char and shorts are returned as int.
+LIB_CFG += /zq                           # Operate quietly.
+LIB_CFG += /fr=$(WWOBJ)\ccbuild.log      # lets not spam source dir
+
+#===============================================================================
+# Compiler and assembler flags for game
+#===============================================================================
+CC_CFG = /d1                           # No debugging information ( else use /d1 )
+CC_CFG += /DWIN32=1
+CC_CFG += /D_WIN32
+#CC_CFG += /DWINSOCK_IPX
+CC_CFG += /DTIBERIAN_DAWN
+CC_CFG += /D$(LANGUAGE)=1
+CC_CFG += /i=$(%DXSDK)\inc
+CC_CFG += /i=$(%WATCOM)\h\nt             # NT include directory.
+CC_CFG += /i=$(%WATCOM)\H                # Normal Watcom include directory.
+CC_CFG += /i=$(%WWLIB)\INCLUDE           # Normal library include directory.
+CC_CFG += /i=$(%VQLIB)\INCLUDE           # Includes player (VQ) directory.
+CC_CFG += /iWIN32LIB                     # Include directory.
+CC_CFG += /bt=NT
+CC_CFG += /otxan
+CC_CFG += /5r                           # Pentium optimized register calling conventions.
+CC_CFG += /db                           # Browsing information for simpler type checking.
+
+CC_CFG += /zp1                          # Pack structures on byte boundary.
+CC_CFG += /s                            # Remove stack check calls.
+CC_CFG += /j                            # char is now signed.
+CC_CFG += /fh=$(WWOBJ)\conquer.pch      # Use precompiled headers.
+CC_CFG += /fhq
+CC_CFG += /hd
+#CC_CFG += /we                           # Treat all warnings as errors.
+CC_CFG += /w8                           # Most warnings enabled.
+CC_CFG += /ri                           # char and shorts are returned as int.
+CC_CFG += /zq                           # Operate quietly.
+CC_CFG += /fr=$(WWOBJ)\ccbuild.log      # lets not spam source dir
+
+ASM_CFG = /iWIN32LIB                    # Include directory.
+ASM_CFG += /zd                          # Debugging information line numbers.
+ASM_CFG += /t                           # Quiet operation.
+ASM_CFG += /m                           # Allow multiple passes.
+ASM_CFG += /w+                          # Enable maximum warnings.
+ASM_CFG += /jJUMPS                      # Enable jump optimizations.
+ASM_CFG += /ml                          # Case sensitivity on code.
+
+#-------------------------------------------------------------------------------
+# Implicit rules
+# Compiler:
+#     ($< = full dependent with path)
+# Assembler:
+#     output obj's are constructed from .obj: & the $& macro
+#     ($< = full dependent with path)
+#     tasm's cfg file is not invoked as a response file.
+#-------------------------------------------------------------------------------
+.c.obj: .AUTODEPEND
+    echo Compiling $<
+    *$(CC) $(CC_CFG) -fo$(WWOBJ)\$^. $<
+
+.cpp.obj: .AUTODEPEND
+    echo Compiling $<
+    *$(CC) $(CC_CFG) -fo$(WWOBJ)\$^. $<
+
+.asm.obj:
+    echo Assembling $<
+    $(ASM) $(ASM_CFG) $<, $(WWOBJ)\$^.
+
+LIBOBJECTS = &
+    DIPTHONG.OBJ &
+    _DIPTABL.OBJ &
+    BITBLIT.OBJ &
+    BUFFER.OBJ &
+    BUFFGLBL.OBJ &
+    CLEAR.OBJ &
+    CLIPRECT.OBJ &
+    DRAWLINE.OBJ &
+    DRAWRECT.OBJ &
+    FADING.OBJ &
+    FILLRECT.OBJ &
+    GBUFFER.OBJ &
+    GETPIX.OBJ &
+    PUTPIX.OBJ &
+    REGIONSZ.OBJ &
+    REMAP.OBJ &
+    SCALE.OBJ &
+    TOBUFF.OBJ &
+    TOPAGE.OBJ &
+    FACING16.OBJ &
+    FACING8.OBJ &
+    FACINGFF.OBJ &
+    LOAD.OBJ &
+    WRITEPCX.OBJ &
+    FONT.OBJ &
+    LOADFONT.OBJ &
+    SET_FONT.OBJ &
+    IFF.OBJ &
+    KEYBOARD.OBJ &
+    MOUSEWW.OBJ &
+    WWMOUSE.OBJ &
+    LCWCOMP.OBJ &
+    LCWUNCMP.OBJ &
+    ALLOCWW.OBJ &
+    MEM_COPY.OBJ &
+    MEM.OBJ &
+    NEWDEL.OBJ &
+    DDRAW.OBJ &
+    CRC.OBJ &
+    DELAY.OBJ &
+    IRANDOM.OBJ &
+    RANDOM.OBJ &
+    REVERSE.OBJ &
+    LOADPAL.OBJ &
+    MORPHPAL.OBJ &
+    PAL.OBJ &
+    PALETTE.OBJ &
+    SETFPAL.OBJ &
+    SHAPE.OBJ &
+    GETSHAPE.OBJ &
+    ICONCACH.OBJ &
+    ICONSET.OBJ &
+    STAMP.OBJ &
+    STMPCACH.OBJ &
+    TIMER.OBJ &
+    TIMERDWN.OBJ &
+    TIMERINI.OBJ &
+    WSA.OBJ &
+    XORDELTA.OBJ &
+    WINDOWS.OBJ &
+    WINHIDE.OBJ
+
+OBJECTS = &
+    SUPER.OBJ &
+    AADATA.OBJ &
+    ABSTRACT.OBJ &
+    ADATA.OBJ &
+    AIRCRAFT.OBJ &
+    ANIM.OBJ &
+    AUDIO.OBJ &
+    BASE.OBJ &
+    BBDATA.OBJ &
+    BDATA.OBJ &
+    BUILDING.OBJ &
+    BULLET.OBJ &
+    CARGO.OBJ &
+    CCFILE.OBJ &
+    CDATA.OBJ &
+    CDFILE.OBJ &
+    CELL.OBJ &
+    CHECKBOX.OBJ &
+    CHEKLIST.OBJ &
+    COLRLIST.OBJ &
+    COMBAT.OBJ &
+    COMBUF.OBJ &
+    CONFDLG.OBJ &
+    CONNECT.OBJ &
+    CONQUER.OBJ &
+    CONST.OBJ &
+    CONTROL.OBJ &
+    COORD.OBJ &
+    CREDITS.OBJ &
+    CREW.OBJ &
+    DEBUG.OBJ &
+    DIAL8.OBJ &
+    DIALOG.OBJ &
+    DISPLAY.OBJ &
+    DOOR.OBJ &
+    DRIVE.OBJ &
+    EDIT.OBJ &
+    EVENT.OBJ &
+    ENDING.OBJ &
+    EXPAND.OBJ &
+    FACING.OBJ &
+    FACTORY.OBJ &
+    FINDPATH.OBJ &
+    FLASHER.OBJ &
+    FLY.OBJ &
+    FOOT.OBJ &
+    FUSE.OBJ &
+    GADGET.OBJ &
+    GAMEDLG.OBJ &
+    GAUGE.OBJ &
+    GLOBALS.OBJ &
+    GOPTIONS.OBJ &
+    GSCREEN.OBJ &
+    HDATA.OBJ &
+    HEAP.OBJ &
+    HELP.OBJ &
+    HOUSE.OBJ &
+    IDATA.OBJ &
+    INFANTRY.OBJ &
+    INI.OBJ &
+    INIT.OBJ &
+    INTERNET.OBJ &
+    INTERPAL.OBJ &
+    INTRO.OBJ &
+    IOMAP.OBJ &
+    IOOBJ.OBJ &
+    IPX.OBJ &
+    IPXADDR.OBJ &
+    IPXCONN.OBJ &
+    IPXGCONN.OBJ &
+    IPXMGR.OBJ &
+    IPX.OBJ &
+    JSHELL.OBJ &
+    KEYFRAME.OBJ &
+    LAYER.OBJ &
+    LINK.OBJ &
+    LIST.OBJ &
+    LOADDLG.OBJ &
+    LOGIC.OBJ &
+    MAP.OBJ &
+    MAPEDDLG.OBJ &
+    MAPEDIT.OBJ &
+    MAPEDPLC.OBJ &
+    MAPEDTM.OBJ &
+    MAPSEL.OBJ &
+    MENUS.OBJ &
+    MISSION.OBJ &
+    MIXFILE.OBJ &
+    MONOC.OBJ &
+    MOUSE.OBJ &
+    MPLAYER.OBJ &
+    MSGBOX.OBJ &
+    MSGLIST.OBJ &
+    NETDLG.OBJ &
+    NOSEQCON.OBJ &
+    NULLCONN.OBJ &
+    NULLDLG.OBJ &
+    NULLMGR.OBJ &
+    OBJECT.OBJ &
+    ODATA.OBJ &
+    OPTIONS.OBJ &
+    OVERLAY.OBJ &
+    POWER.OBJ &
+    PROFILE.OBJ &
+    QUEUE.OBJ &
+    RADAR.OBJ &
+    RADIO.OBJ &
+    RAND.OBJ &
+    REINF.OBJ &
+    SAVELOAD.OBJ &
+    SCENARIO.OBJ &
+    SCORE.OBJ &
+    SCROLL.OBJ &
+    SDATA.OBJ &
+    SHAPEBTN.OBJ &
+    SIDEBAR.OBJ &
+    SLIDER.OBJ &
+    SMUDGE.OBJ &
+    SOUNDDLG.OBJ &
+    SPECIAL.OBJ &
+    STARTUP.OBJ &
+    SUPPORT.OBJ &
+    TAB.OBJ &
+    TARCOM.OBJ &
+    TARGET.OBJ &
+    TCPIP.OBJ &
+    TDATA.OBJ &
+    TEAM.OBJ &
+    TEAMTYPE.OBJ &
+    TECHNO.OBJ &
+    TEMPLATE.OBJ &
+    TERRAIN.OBJ &
+    TEXTBTN.OBJ &
+    THEME.OBJ &
+    TOGGLE.OBJ &
+    TRIGGER.OBJ &
+    TURRET.OBJ &
+    TXTLABEL.OBJ &
+    TXTPRNT.OBJ &
+    UDATA.OBJ &
+    UNIT.OBJ &
+    VECTOR.OBJ &
+    UTRACKER.OBJ &
+    VISUDLG.OBJ &
+    UTRACKER.OBJ &
+    PACKET.OBJ &
+    FIELD.OBJ &
+    STATS.OBJ &
+    CCDDE.OBJ &
+    DDE.OBJ &
+    WINASM.OBJ &
+    WINSTUB.OBJ &
+    IPX95.OBJ &
+    STATS.OBJ &
+    KEYFBUFF.OBJ &
+    MMX.OBJ &
+    RULES.OBJ &
+    TEXFILL.OBJ &
+    NULLDLG.OBJ &
+    RAWFILE.OBJ
+
+PROJ_LIBS = &
+    WIN32LIB.LIB
+
+VQ_LIBS = &
+    VQA32WP.LIB &
+    VQM32WP.LIB
+
+
+################################################################################
+# Pre-compilation process. Move old files to backup directory.
+.BEFORE
+    -IF NOT EXIST $(WWOBJ) mkdir $(WWOBJ)                # Create object output directory.
+    -if exist *.bak move *.bak bak
+    -if exist $(WWOBJ)\*.pch del $(WWOBJ)\*.pch
+
+# After make has completed.
+.AFTER
+
+# If there is an abnormal termination in make process (e.g., error in compile).
+.ERROR
+
+
+################################################################################
+# Default target
+all:  $(WWOBJ)\ww32lib.lib $(WWOBJ)\conquer.exe
+
+$(WWOBJ)\jshell.lib: $(LIBFILES) $(WWOBJ)\jshell.lnk
+    $(LIB) -c $^@ @$(WWOBJ)\jshell.lnk
+
+$(WWOBJ)\jshell.lnk: makefile
+    %create $^@
+    for %index in ($(LIBFILES))  do %append $^@ -+ $(WWOBJ)\%index
+
+CWSTUB.OBJ: CWSTUB.C
+    *wcc /i=$(%WATCOM)\h /dQUIET /dVMM /ms /zQ -fo$(WWOBJ)\$^. $<
+
+CWSTUB.EXE: CWSTUB.OBJ
+    *$(%WATCOM)\binw\wlink system dos file $(WWOBJ)\cwstub.obj name cwstub.exe option quiet library \wat\lib386\dos\clibs.lib, \wat\lib386\math87s.lib, \wat\lib386\dos\emu87.lib
+
+$(WWOBJ)\ww32lib.lib: $(LIBOBJECTS) $(WWOBJ)\$(LIBLINKFILE)
+    $(LIB) -c $^@ @$(WWOBJ)\$(LIBLINKFILE)
+    Echo "ww32lib.lib" library completed.
+
+$(WWOBJ)\$(LIBLINKFILE): makefile
+    %create $^@
+    for %index in ($(LIBOBJECTS)) do %append $^@ -+ $(WWOBJ)\%index
+    
+################################################################################
+# Build the EXE
+$(WWOBJ)\conquer.exe: $(OBJECTS) $(WWOBJ)\$(LINKFILE)
+    Echo "conquer.exe" linking phase. [$(LANGUAGE)]
+        $(LINKER) name $@ @$(WWOBJ)\$(LINKFILE)
+        $(%WATCOM)\binnt\wrc cc_icon $@
+    Echo "conquer.exe" executable completed. [$(LANGUAGE)]
+#add symbols to exe
+    $..\UTILS\cvtodbg.exe $(WWOBJ)\conquer.exe conquer.sym
+    Echo "conquer.exe" symbols added. [$(LANGUAGE)]
+#cleanup
+    del /f conquer.sym
+    del /f cc_icon.res
+
+################################################################################
+# Copy compiled binaries to the game directory.
+!ifdef COPY_BINARIES
+pre: .SYMBOLIC
+    -copy conquer.exe $(%INSTALLPATH) /u /v
+    #-$(%WATCOM)\binw\wstrip -n -q $(%INSTALLPATH)\conquer.exe
+!endif
+
+
+################################################################################
+# This creates the linker command file for the Windows 95 version.
+$(WWOBJ)\win95.lnk : makefile
+    %create $^@
+    %append $^@ system win95
+    %append $^@ option redefsok
+    %append $^@ option quiet
+# output a linker map
+    %append $^@ option map
+# include artificial(made by watcom) symbols in map
+    %append $^@ option art
+#show symbols in map as mangled
+#    %append $^@ option mang
+# show dead symbols removed by linker
+    %append $^@ option showdead
+# include static artificial(made by watcom) symbols in map
+    %append $^@ option statics
+    %append $^@ option symfile=conquer.sym
+# make the linker process verbose
+    %append $^@ option verbose
+# sort linker map by addresses
+#    %append $^@ sort global
+# vigorously eliminate dead code
+#    %append $^@ option eliminate
+    %append $^@ option caseexact
+    %append $^@ option stack=128k
+# can't load watcom in ida
+#    %append $^@ debug watcom all
+# what does this even do.....
+#    %append $^@ debug all
+# can load codeview tho
+    %append $^@ debug codeview
+# however needs to be packed for MS debuggers to read it
+    %append $^@ option cvp
+    for %index in ($(OBJECTS)) do %append $^@ file $(WWOBJ)\%index
+    %append $^@ library $(WWOBJ)\ww32lib.lib
+    %append $^@ library ..\LIBS\vqa32wp.lib
+    %append $^@ library $(%VQLIB)\lib\vqm32wp.lib
+    %append $^@ library $(%WWIPX)\wwipx32.lib
+    %append $^@ library $(%DXSDK)\lib\x86\dxguid.lib
+    %append $^@ library ..\LIBS\ddraw.lib
+    %append $^@ library $(%DXSDK)\lib\x86\dsound.lib
+    %append $^@ library $(%WWLIB)\lib\keyboard.lib
+    %append $^@ library ..\dxmedia\lib\amstrmid.lib
+    %append $^@ library ..\dxmedia\lib\strmbasd.lib
+#    %append $^@ library $(%WATCOM)\lib386\nt\uuid.lib
+    %append $^@ library uuid.lib
+    %append $^@ library $(%WWLIB)\dxguid.lib
+
+#ipxprot.obj: $(WWOBJ)\ipxreal.ibn ipxprot.asm
+#    $(ASM) $(ASM_CFG) ipxprot.asm, $(WWOBJ)\ipxprot.obj
+#    copy $(WWOBJ)\ipxprot.obj d:obj /U
+
+ipx.obj: ipx.cpp function.h
+    echo Compiling $[.
+    *$(CC) $(CC_CFG) -zz -fo$(WWOBJ)\$^. $[*.cpp
+
+ipxmgr.obj: ipxmgr.cpp function.h
+    echo Compiling $[.
+    *$(CC) $(CC_CFG) -zz -fo$(WWOBJ)\$^. $[*.cpp
+
+ipxconn.obj: ipxconn.cpp function.h
+    echo Compiling $[.
+    *$(CC) $(CC_CFG) -zz -fo$(WWOBJ)\$^. $[*.cpp
+
+ipx95.obj: ipx95.cpp function.h
+    echo Compiling $[.
+    *$(CC) $(CC_CFG) -zz -fo$(WWOBJ)\$^. $[*.cpp
+
+
+################################################################################
+# Help on using this Makefile.
+help: .SYMBOLIC
+    @echo.
+    @echo    The following actions are available:
+    @echo      wmake           To build all conquer.exe target and dependencies
+    @echo      wmake help      For this information
+    @echo.
+
+
+#******************************* End of makefile *******************************

@@ -185,7 +185,7 @@ void Set_Scenario_Name(char *buf, int scenario, ScenarioPlayerType player, Scena
 }
 
 
-extern void GlyphX_Assign_Houses(void);	//ST - 6/25/2019 11:08AM
+//extern void GlyphX_Assign_Houses(void);	//ST - 6/25/2019 11:08AM
 
 
 /***********************************************************************************************
@@ -264,7 +264,7 @@ bool Read_Scenario_Ini(char *root, bool fresh)
 		}
 	}
 	if (!Force_CD_Available(RequiredCD)) {
-		Prog_End("Read_Scenario_Ini - CD not found", true);
+		Prog_End();
 		if (!RunningAsDLL) {
 			exit(EXIT_FAILURE);
 		}
@@ -277,13 +277,13 @@ bool Read_Scenario_Ini(char *root, bool fresh)
 	sprintf(fname,"%s.INI",root);
 	CCFileClass file(fname);
 	if (!file.Is_Available()) {
-		GlyphX_Debug_Print("Failed to find scenario file");
-		GlyphX_Debug_Print(fname);
+		//GlyphX_Debug_Print("Failed to find scenario file");
+		//GlyphX_Debug_Print(fname);
 		return(false);
 	} else {
 		
-		GlyphX_Debug_Print("Opened scenario file");
-		GlyphX_Debug_Print(fname);
+		//GlyphX_Debug_Print("Opened scenario file");
+		//GlyphX_Debug_Print(fname);
 		
 		file.Read(buffer, _ShapeBufferSize-1);
 	}
@@ -418,7 +418,7 @@ bool Read_Scenario_Ini(char *root, bool fresh)
 #endif
 		//Call new Assign_Houses function. ST - 6/25/2019 11:07AM
 		//Assign_Houses();
-		GlyphX_Assign_Houses();
+		//GlyphX_Assign_Houses();
 	}
 
 	/*
@@ -671,14 +671,14 @@ bool Read_Scenario_Ini_File(char *scenario_file_name, char* bin_file_name, const
 
 	CCFileClass file(scenario_file_name);
 	if (!file.Is_Available()) {
-		GlyphX_Debug_Print("Failed to find scenario file");
-		GlyphX_Debug_Print(scenario_file_name);
+		//GlyphX_Debug_Print("Failed to find scenario file");
+		//GlyphX_Debug_Print(scenario_file_name);
 		return(false);
 	}
 	else {
 
-		GlyphX_Debug_Print("Opened scenario file");
-		GlyphX_Debug_Print(scenario_file_name);
+		//GlyphX_Debug_Print("Opened scenario file");
+		//GlyphX_Debug_Print(scenario_file_name);
 
 		file.Read(buffer, _ShapeBufferSize - 1);
 	}
@@ -813,7 +813,7 @@ bool Read_Scenario_Ini_File(char *scenario_file_name, char* bin_file_name, const
 #endif
 		//Call new Assign_Houses function. ST - 6/25/2019 11:07AM
 		//Assign_Houses();
-		GlyphX_Assign_Houses();
+		//GlyphX_Assign_Houses();
 	}
 
 	/*
@@ -1085,7 +1085,7 @@ bool Read_Movies_From_Scenario_Ini(char *root, bool fresh)
 		}
 	}
 	if (!Force_CD_Available(RequiredCD)) {
-		Prog_End("Read_Scenario_Ini - CD not found", true);
+		Prog_End();
 		if (!RunningAsDLL) {
 			exit(EXIT_FAILURE);
 		}
@@ -1098,14 +1098,14 @@ bool Read_Movies_From_Scenario_Ini(char *root, bool fresh)
 	sprintf(fname, "%s.INI", root);
 	CCFileClass file(fname);
 	if (!file.Is_Available()) {
-		GlyphX_Debug_Print("Failed to find scenario file");
-		GlyphX_Debug_Print(fname);
+		//GlyphX_Debug_Print("Failed to find scenario file");
+		//GlyphX_Debug_Print(fname);
 		return(false);
 	}
 	else {
 
-		GlyphX_Debug_Print("Opened scenario file");
-		GlyphX_Debug_Print(fname);
+		//GlyphX_Debug_Print("Opened scenario file");
+		//GlyphX_Debug_Print(fname);
 
 		file.Read(buffer, _ShapeBufferSize - 1);
 	}

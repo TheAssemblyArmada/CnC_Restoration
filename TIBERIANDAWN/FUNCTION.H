@@ -115,7 +115,7 @@ UnitTypeClass      ³   BuildingTypeClass      ³
 **	November of '94. Until the compiler supports this, use the following
 **	definition.
 */
-#if (0)
+#if __WATCOMC__ <= 1100
 #ifndef TRUE_FALSE_DEFINED
 enum {false=0,true=1};
 typedef int bool;
@@ -197,8 +197,7 @@ extern long Frame;
 inline CELL Coord_XCell(COORDINATE coord) {return (CELL)(*(((unsigned char*)&coord)+1));}
 inline CELL Coord_YCell(COORDINATE coord) {return (CELL)(*(((unsigned char*)&coord)+3));}
 //inline CELL Coord_Cell(COORD coord){return (CELL)(((*(((unsigned short *)&coord)+1) & 0xFF00) >> 2) | *(((unsigned char *)&coord)+1));}
-#if (0)
-__cdecl CELL Coord_Cell(COORDINATE coord);
+CELL Coord_Cell(COORDINATE coord);
 #pragma aux Coord_Cell parm [eax] \
 	modify [ebx] \
 	value [ax]		= 				\
@@ -207,8 +206,6 @@ __cdecl CELL Coord_Cell(COORDINATE coord);
 	"xor	al,al"					\
 	"shr	eax,2"					\
 	"or	al,bh"
-#endif
-CELL __cdecl Coord_Cell(COORDINATE coord);
 
 #include	"rules.h"
 #include  "utracker.h"
@@ -865,8 +862,6 @@ extern int Load_Interpolated_Palettes(char const *filename, BOOL add=FALSE);
  *   05/27/1994 JLB : Created.                                                                 *
  *=============================================================================================*/
 int Distance_Coord(COORDINATE coord1, COORDINATE coord2);
-
-#if (0)
 #pragma aux Distance_Coord parm [eax] [ebx] \
 	modify [edx ebx] \
 	value [eax]		= 				\
@@ -887,7 +882,6 @@ int Distance_Coord(COORDINATE coord1, COORDINATE coord2);
 	"ok:"						\
 	"shr	dx,1"				\
 	"add	ax,dx"
-#endif
 
 inline int Distance(COORDINATE coord1, COORDINATE coord2)
 {
@@ -979,4 +973,4 @@ void GlyphX_Debug_Print(const char *debug_text);
 /*
 ** Achievement event. ST - 11/11/2019 11:39AM
 */
-void On_Achievement_Event(const HouseClass* player_ptr, const char *achievement_type, const char *achievement_reason);
+//void On_Achievement_Event(const HouseClass* player_ptr, const char *achievement_type, const char *achievement_reason);

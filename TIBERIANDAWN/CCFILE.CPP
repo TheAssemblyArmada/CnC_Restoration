@@ -91,7 +91,7 @@ void CCFileClass::Error(int , int , char const * )
 #else
 
 	if (!Force_CD_Available(RequiredCD)) {
-		Prog_End("CCFileClass::Error CD not found", true);
+		Prog_End();
 		if (!RunningAsDLL) {
 			exit(EXIT_FAILURE);
 		}

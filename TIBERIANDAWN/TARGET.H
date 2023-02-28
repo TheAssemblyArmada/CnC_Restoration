@@ -40,7 +40,7 @@
 **	intermediate goals. Each goal (or target if you will) can be one of the
 **	following kinds.
 */
-typedef enum KindType : unsigned char {
+typedef enum KindType {
 	KIND_NONE,
 	KIND_CELL,
 	KIND_UNIT,

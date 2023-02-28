@@ -33,30 +33,16 @@
 ;* - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - *
 
 ;********************** Model & Processor Directives ***********************
-;IDEAL
-;P386
-;MODEL USE32 FLAT
-;jumps
+IDEAL
+P386
+MODEL USE32 FLAT
+jumps
 
-.MODEL FLAT
-;.386
+GLOBAL C Buffer_Frame_To_Page : NEAR
 
 ;******************************** Includes *********************************
-;INCLUDE "gbuffer.inc"
+INCLUDE "gbuffer.inc"
 ;include	"profile.inc"
-
-OPTIMAL_BYTE_COPY	equ	14
-
-GraphicViewPort STRUCT 
-GVPOffset		DD		?		; offset to virtual viewport
-GVPWidth			DD		?		; width of virtual viewport
-GVPHeight		DD		?		; height of virtual viewport
-GVPXAdd			DD		?		; x mod to get to next line
-GVPXPos			DD		?		; x pos relative to Graphic Buff
-GVPYPos			DD		?		; y pos relative to Graphic Buff
-GVPPitch		dd		?		; modulo of graphic view port
-GVPBuffPtr		DD		?		; ptr to associated Graphic Buff
-GraphicViewPort ENDS
 
 ;******************************** Equates **********************************
 
@@ -146,7 +132,7 @@ PRED_MASK		EQU	000Eh	; mask used for predator pixel puts
 ; Thus, each table is an array of function pointers.
 ;
 ;---------------------------------------------------------------------------
-USE MACRO  func, varname
+MACRO USE func, varname
  IF WANT
   varname 	DD	func
  ELSE
@@ -154,12 +140,12 @@ USE MACRO  func, varname
  ENDIF
 ENDM
 
-prologue	macro
+macro prologue
 endm
 
 
 
-epilogue macro 
+macro epilogue
 endm
 
 
@@ -170,7 +156,7 @@ endm
 ;---------------------------------------------------------------------------
 
 
-.DATA
+DATASEG
 
 ;---------------------------------------------------------------------------
 ; Predator effect variables
@@ -204,16 +190,16 @@ BFPredTable	DW	1, 3, 2, 5, 2, 3, 4, 1
 
 
 
-		extern	C BigShapeBufferStart:dword
-		extern	C UseBigShapeBuffer:dword
-		extern	C TheaterShapeBufferStart:dword
-		extern	C IsTheaterShape:dword
-		;extern	C Single_Line_Trans_Entry:near
-		;extern	C Next_Line:near
-		extern	C MMX_Done:near
-		extern	C MMXAvailable:dword
-		;extern	C EndNewShapeJumpTable:byte
-		;extern	C NewShapeJumpTable:dword
+		GLOBAL	C BigShapeBufferStart:dword
+		GLOBAL	C UseBigShapeBuffer:dword
+		GLOBAL	C TheaterShapeBufferStart:dword
+		GLOBAL	C IsTheaterShape:dword
+		;GLOBAL	C Single_Line_Trans_Entry:near
+		;GLOBAL	C Next_Line:near
+		GLOBAL	C MMX_Done:near
+		GLOBAL	C MMXAvailable:dword
+		;GLOBAL	C EndNewShapeJumpTable:byte
+		;GLOBAL	C NewShapeJumpTable:dword
 
 
 ;**********************************************************************************
@@ -234,73 +220,75 @@ BLIT_SKIP		=16
 BLIT_ALL		=BLIT_TRANSPARENT or BLIT_GHOST or BLIT_FADING or BLIT_PREDATOR or BLIT_SKIP
 
 
-ShapeHeaderType	STRUCT
+STRUC ShapeHeaderType
 
 		draw_flags	dd	?
 		shape_data	dd	?
 		shape_buffer	dd	?
 
-ShapeHeaderType	ENDS
+ENDS ShapeHeaderType
 
 
 
 ;
 ; Global definitions for routines that draw a single line of a shape
 ;
-		;extern	Short_Single_Line_Copy:near
-		;extern	Single_Line_Trans:near
-		;extern	Single_Line_Ghost:near
-		;extern	Single_Line_Ghost_Trans:near
-		;extern	Single_Line_Fading:near
-		;extern	Single_Line_Fading_Trans:near
-		;extern	Single_Line_Ghost_Fading:near
-		;extern	Single_Line_Ghost_Fading_Trans:near
-		;extern	Single_Line_Predator:near
-		;extern	Single_Line_Predator_Trans:near
-		;extern	Single_Line_Predator_Ghost:near
-		;extern	Single_Line_Predator_Ghost_Trans:near
-		;extern	Single_Line_Predator_Fading:near
-		;extern	Single_Line_Predator_Fading_Trans:near
-		;extern	Single_Line_Predator_Ghost_Fading:near
-		;extern	Single_Line_Predator_Ghost_Fading_Trans:near
-		;extern	Single_Line_Skip:near
+GLOBAL	Short_Single_Line_Copy:near
+GLOBAL	Single_Line_Trans:near
+GLOBAL	Single_Line_Ghost:near
+GLOBAL	Single_Line_Ghost_Trans:near
+GLOBAL	Single_Line_Fading:near
+GLOBAL	Single_Line_Fading_Trans:near
+GLOBAL	Single_Line_Ghost_Fading:near
+GLOBAL	Single_Line_Ghost_Fading_Trans:near
+GLOBAL	Single_Line_Predator:near
+GLOBAL	Single_Line_Predator_Trans:near
+GLOBAL	Single_Line_Predator_Ghost:near
+GLOBAL	Single_Line_Predator_Ghost_Trans:near
+GLOBAL	Single_Line_Predator_Fading:near
+GLOBAL	Single_Line_Predator_Fading_Trans:near
+GLOBAL	Single_Line_Predator_Ghost_Fading:near
+GLOBAL	Single_Line_Predator_Ghost_Fading_Trans:near
+GLOBAL	Single_Line_Skip:near
 
-		;extern	Single_Line_Single_Fade:near
-		;extern	Single_Line_Single_Fade_Trans:near
+GLOBAL	Single_Line_Single_Fade:near
+GLOBAL	Single_Line_Single_Fade_Trans:near
 
 ;externdef AllFlagsJumpTable:dword
 ;
-externdef NewShapeJumpTable:dword
-externdef EndNewShapeJumpTable:byte
-externdef CriticalFadeRedirections:dword
+GLOBAL NewShapeJumpTable:dword
+GLOBAL EndNewShapeJumpTable:byte
+;GLOBAL CriticalFadeRedirections:dword
 ;externdef BufferFrameTable:dword
 
-;externdef CriticalFadeRedirections:dword
-;externdef CriticalFadeRedirections:dword
-;externdef CriticalFadeRedirections:dword
-;externdef BF_Copy:far ptr
-;externdef BF_Trans:dword
-;externdef BF_Ghost:dword
-;externdef BF_Ghost_Trans:dword
-;externdef BF_Fading:dword
-;externdef BF_Fading_Trans:dword
-;externdef BF_Ghost_Fading:dword
-;externdef BF_Ghost_Fading_Trans:dword
-;externdef BF_Predator:dword
-;externdef BF_Predator_Trans:dword
-;externdef BF_Predator_Ghost:dword
-;externdef BF_Predator_Ghost_Trans:dword
-;externdef BF_Predator_Fading:dword
-;externdef BF_Predator_Fading_Trans:dword
-;externdef BF_Predator_Ghost_Fading:dword
-;externdef BF_Predator_Ghost_Fading_Trans:dword
+;GLOBAL CriticalFadeRedirections:dword
+;GLOBAL CriticalFadeRedirections:dword
+;GLOBAL CriticalFadeRedirections:dword
+GLOBAL BF_Copy:near
+GLOBAL BF_Trans:near
+GLOBAL BF_Ghost:near
+GLOBAL BF_Ghost_Trans:near
+GLOBAL BF_Fading:near
+GLOBAL BF_Fading_Trans:near
+GLOBAL BF_Ghost_Fading:near
+GLOBAL BF_Ghost_Fading_Trans:near
+GLOBAL BF_Predator:near
+GLOBAL BF_Predator_Trans:near
+GLOBAL BF_Predator_Ghost:near
+GLOBAL BF_Predator_Ghost_Trans:near
+GLOBAL BF_Predator_Fading:near
+GLOBAL BF_Predator_Fading_Trans:near
+GLOBAL BF_Predator_Ghost_Fading:near
+GLOBAL BF_Predator_Ghost_Fading_Trans:near
 
-externdef	C Single_Line_Trans:near
-externdef	C Single_Line_Trans_Entry:near
-externdef	C Next_Line:near
+GLOBAL	C Single_Line_Trans:near
+GLOBAL	C Single_Line_Trans_Entry:near
+GLOBAL	C Next_Line:near
 
 
-.CODE
+CODESEG
+
+INCLUDE "keyfbuff.inc"
 
 
 ;---------------------------------------------------------------------------
@@ -361,7 +349,7 @@ USE	BF_Predator_Ghost_Fading_Trans
 
 
 
-.DATA
+DATASEG
 
 ;NewShapeJumpTable label	near ptr		dword
 
@@ -954,7 +942,7 @@ CriticalFadeRedirections		dd	Short_Single_Line_Copy
 ; Jumptable for shape line drawing routines with all flags set
 ;
 
-AllFlagsJumpTable label dword
+label AllFlagsJumpTable ptr dword
 		dd	Short_Single_Line_Copy
 		dd	Single_Line_Trans
 		dd	Single_Line_Ghost
@@ -991,7 +979,7 @@ AllFlagsJumpTable label dword
 
 EndNewShapeJumpTable	db 0
 
-.CODE
+CODESEG
 
 
 
@@ -1019,15 +1007,15 @@ EndNewShapeJumpTable	db 0
 ;*   11/29/95 10:09AM ST : Created.                                                          *
 ;*===========================================================================================*
 
-		Setup_Shape_Header proc	C pixel_width:DWORD, pixel_height:DWORD, src:DWORD, headers:DWORD, flags:DWORD, Translucent:DWORD, IsTranslucent:DWORD
+		proc Setup_Shape_Header C
 
-		;ARG	pixel_width 	:DWORD		; width of rectangle to blit
-		;ARG	pixel_height	:DWORD		; height of rectangle to blit
-		;ARG  	src         	:DWORD		; this is a member function
-		;ARG	headers	    	:DWORD
-		;ARG	flags		:DWORD
-		;ARG	Translucent	:DWORD
-		;ARG	IsTranslucent	:DWORD
+		ARG	pixel_width 	:DWORD		; width of rectangle to blit
+		ARG	pixel_height	:DWORD		; height of rectangle to blit
+		ARG  	src         	:DWORD		; this is a member function
+		ARG	headers	    	:DWORD
+		ARG	flags		:DWORD
+		ARG	Translucent	:DWORD
+		ARG	IsTranslucent	:DWORD
 		LOCAL	trans_count	:DWORD
 
 		pushad
@@ -1037,7 +1025,7 @@ EndNewShapeJumpTable	db 0
 		mov	edi,[headers]		;ptr to headers we are going to set up
 		mov	eax,[flags]
 		and	eax,SHAPE_TRANS or SHAPE_FADING or SHAPE_PREDATOR or SHAPE_GHOST
-		mov	[edi].ShapeHeaderType.draw_flags,eax 	;save old flags in header
+		mov	[edi+ShapeHeaderType.draw_flags],eax 	;save old flags in header
 		add	edi,size ShapeHeaderType
 		mov	edx,[pixel_height]	;number of shape lines to scan
 
@@ -1077,7 +1065,7 @@ not_pred:	test	[flags],SHAPE_GHOST
 		jz	not_ghost
 		push	edi
 		mov	edi,[IsTranslucent]
-		cmp	byte ptr [edi+eax],-1
+		cmp	[byte ptr edi+eax],-1
 		pop	edi
 		jz	not_ghost
 		or	bl,BLIT_GHOST
@@ -1135,37 +1123,7 @@ got_line_type:mov	[edi],bh
 		popad
 		ret
 
-Setup_Shape_Header	endp	
-
-
-
-
-;**************************************************************
-;
-; Macro to fetch the header of the next line and jump to the appropriate routine
-;
-next_line	macro
-
-		add	edi , [ dest_adjust_width ]	;add in dest modulo
-		dec	edx				;line counter
-		jz	real_out			;return
-		mov	ecx,[save_ecx]			;ecx is pixel count
-		mov	eax,[header_pointer]		;ptr to next header byte
-		mov	al,[eax]
-		inc	[header_pointer]
-		and	eax,BLIT_ALL			;Make sure we dont jump to some spurious address
-							; if the header is wrong then its better to draw with the wrong
-							; shape routine than to die
-		shl	eax,2
-		add	eax,[ShapeJumpTableAddress]	;get the address to jump to
-		jmp	dword ptr [eax]			;do the jump
-
-		endm
-
-
-
-
-
+endp Setup_Shape_Header
 
 ;***************************************************************************
 ;* VVC::TOPAGE -- Copies a linear buffer to a virtual viewport		   *
@@ -1188,21 +1146,21 @@ next_line	macro
 ;* HISTORY:                                                                *
 ;*   06/15/1994 PWG : Created.                                             *
 ;*=========================================================================*
-Buffer_Frame_To_Page proc C public USES eax ebx ecx edx esi edi x_pixel:DWORD, y_pixel:DWORD, pixel_width:DWORD, pixel_height:DWORD, src:DWORD, dest:DWORD, flags:DWORD
+proc Buffer_Frame_To_Page C  
 
-	;USES	eax,ebx,ecx,edx,esi,edi
+	USES	eax,ebx,ecx,edx,esi,edi
 
 	;*===================================================================
 	;* define the arguements that our function takes.
 	;*===================================================================
-	;ARG	x_pixel     :DWORD		; x pixel position in source
-	;ARG	y_pixel     :DWORD		; y pixel position in source
-	;ARG	pixel_width :DWORD		; width of rectangle to blit
-	;ARG	pixel_height:DWORD		; height of rectangle to blit
-	;ARG    	src         :DWORD		; this is a member function
-	;ARG	dest        :DWORD		; what are we blitting to
+	ARG	x_pixel     :DWORD		; x pixel position in source
+	ARG	y_pixel     :DWORD		; y pixel position in source
+	ARG	pixel_width :DWORD		; width of rectangle to blit
+	ARG	pixel_height:DWORD		; height of rectangle to blit
+	ARG    	src         :DWORD		; this is a member function
+	ARG	dest        :DWORD		; what are we blitting to
 
-	;ARG	flags       :DWORD		; flags passed
+	ARG	flags       :DWORD		; flags passed
 
 	;*===================================================================
 	; Define some locals so that we can handle things quickly
@@ -1247,13 +1205,13 @@ Buffer_Frame_To_Page proc C public USES eax ebx ecx edx esi edi x_pixel:DWORD, y
 	mov	[header_pointer],edi
 
 	mov	eax,[BigShapeBufferStart]
-	cmp	[edi].ShapeHeaderType.shape_buffer,0
+	cmp	[edi+ShapeHeaderType.shape_buffer],0
 	jz	is_ordinary_shape
 	mov	eax,[TheaterShapeBufferStart]
 is_ordinary_shape:
 	mov	[shape_buffer_start],eax
 
-	mov	edi,[edi].ShapeHeaderType.shape_data
+	mov	edi,[edi+ShapeHeaderType.shape_data]
 	add	edi,[shape_buffer_start]
 	mov	[src],edi
 	mov	[use_old_draw],0
@@ -1315,11 +1273,11 @@ check_fading:
 	jz	new_shape
 
 	mov	edi,[header_pointer]
-	cmp	[edi].ShapeHeaderType.draw_flags,-1
+	cmp	[edi+ShapeHeaderType.draw_flags],-1
 	jz	setup_headers
 	mov	eax,[flags]							 ;Redo the shape headers if this shape was
 	and	eax,SHAPE_TRANS or SHAPE_FADING or SHAPE_PREDATOR or SHAPE_GHOST ;initially set up with different flags
-	cmp	eax,[edi].ShapeHeaderType.draw_flags
+	cmp	eax,[edi+ShapeHeaderType.draw_flags]
 	jz	no_header_setup
 new_shape:
 	mov	[use_old_draw],1
@@ -1394,12 +1352,12 @@ set_fading:
 	mov	[ FadingNum ] , eax
 
 	mov	ebx,[ShapeJumpTableAddress]
-	mov	dword ptr [CriticalFadeRedirections-NewShapeJumpTable+ebx],offset Single_Line_Single_Fade
-	mov	dword ptr [CriticalFadeRedirections-NewShapeJumpTable+ebx+4],offset Single_Line_Single_Fade_Trans
+	mov	[dword ptr CriticalFadeRedirections-NewShapeJumpTable+ebx],offset Single_Line_Single_Fade
+	mov	[dword ptr CriticalFadeRedirections-NewShapeJumpTable+ebx+4],offset Single_Line_Single_Fade_Trans
 	cmp	eax,1
 	jz	single_fade
-	mov	dword ptr [CriticalFadeRedirections-NewShapeJumpTable+ebx],offset Single_Line_Fading
-	mov	dword ptr [CriticalFadeRedirections-NewShapeJumpTable+ebx+4],offset Single_Line_Fading_Trans
+	mov	[dword ptr CriticalFadeRedirections-NewShapeJumpTable+ebx],offset Single_Line_Fading
+	mov	[dword ptr CriticalFadeRedirections-NewShapeJumpTable+ebx+4],offset Single_Line_Fading_Trans
 
 single_fade:
 
@@ -1438,9 +1396,9 @@ pred_neg_init:
 
 pred_loop:
 	movzx	eax , [ WORD PTR BFPredNegTable + ebx ]
-	add	eax , [esi].GraphicViewPort.GVPWidth	; add width
-	add	eax , [esi].GraphicViewPort.GVPXAdd	; add x add
-	add	eax , [esi].GraphicViewPort.GVPPitch	; extra pitch of DD surface	ST - 9/29/95 1:08PM
+	add	eax , [esi+GraphicViewPort.GVPWidth]	; add width
+	add	eax , [esi+GraphicViewPort.GVPXAdd]	; add x add
+	add	eax , [esi+GraphicViewPort.GVPPitch]	; extra pitch of DD surface	ST - 9/29/95 1:08PM
 	mov	[ WORD PTR BFPredNegTable + 16 + ebx ] , ax
 	dec	ebx
 	dec	ebx
@@ -1463,8 +1421,8 @@ setupfunc:
 	and	ebx , FLAG_MASK			; clip high bits
 	add	ebx , ebx			; mult by 4 to get DWORD offset
 	add	ebx , ebx
-	mov	ebx , dword ptr [ BufferFrameTable + ebx ]	; get table value
-	mov	dword ptr [ BufferFrameRout ] , ebx		; store it in the function pointer
+	mov	ebx , [ dword ptr BufferFrameTable + ebx ]	; get table value
+	mov	[ dword ptr BufferFrameRout ] , ebx		; store it in the function pointer
 
 ; Clip dest Rectangle against source Window boundaries.
 
@@ -1473,7 +1431,7 @@ setupfunc:
 	mov  	esi , [ dest ]	    ; get ptr to dest
 	xor 	ecx , ecx
 	xor 	edx , edx
-	mov	edi , [esi].GraphicViewPort.GVPWidth  ; get width into register
+	mov	edi , [esi+GraphicViewPort.GVPWidth] ; get width into register
 	mov	ebx , [ x_pixel ]
 	mov	eax , [ x_pixel ]
 	add	ebx , [ pixel_width ]
@@ -1486,7 +1444,7 @@ setupfunc:
 	shld	ecx , eax , 1
 	shld	edx , ebx , 1
 
-	mov	edi,[esi].GraphicViewPort.GVPHeight ; get height into register
+	mov	edi,[esi+GraphicViewPort.GVPHeight] ; get height into register
 	mov	ebx , [ y_pixel ]
 	mov	eax , [ y_pixel ]
 	add	ebx , [ pixel_height ]
@@ -1530,22 +1488,22 @@ dest_bottom_ok:
 	test	dl , 0100b
 	jz	dest_right_ok
 
-	mov	eax , [esi].GraphicViewPort.GVPWidth  ; get width into register
+	mov	eax , [esi+GraphicViewPort.GVPWidth]  ; get width into register
 	mov	[ x1_pixel ] , eax
 
 dest_right_ok:
 	test	dl , 0001b
 	jz	do_blit
 
-	mov	eax , [esi].GraphicViewPort.GVPHeight  ; get width into register
+	mov	eax , [esi+GraphicViewPort.GVPHeight]  ; get width into register
 	mov	[ y1_pixel ] , eax
 
 do_blit:
 	cld
-	mov	eax , [esi].GraphicViewPort.GVPXAdd
-	add	eax , [esi].GraphicViewPort.GVPPitch
-	add	eax , [esi].GraphicViewPort.GVPWidth
-	mov	edi , [esi].GraphicViewPort.GVPOffset
+	mov	eax , [esi+GraphicViewPort.GVPXAdd]
+	add	eax , [esi+GraphicViewPort.GVPPitch]
+	add	eax , [esi+GraphicViewPort.GVPWidth]
+	mov	edi , [esi+GraphicViewPort.GVPOffset]
 
 	mov	ecx , eax
 	mul	[ y_pixel ]
@@ -1584,7 +1542,7 @@ do_blit:
 	and	eax,BLIT_ALL
 	shl	eax,2
 	add	eax,[ShapeJumpTableAddress]
-	jmp	dword ptr [eax]
+	jmp	[dword ptr eax]
 
 
 use_old_stuff:
@@ -1662,7 +1620,7 @@ forward_loop_bytes:
 ;********************************************************************
 ;********************************************************************
 
-;		segment code page public use32 'code'	; Need stricter segment alignment
+		segment code page public use32 'code'	; Need stricter segment alignment
 							; for pentium optimisations
 
 
@@ -1670,8 +1628,7 @@ forward_loop_bytes:
 ; Expand the 'next_line' macro so we can jump to it
 ;
 ;
-;  ST - 12/20/2018 3:48PM
-Next_Line::	next_line
+Next_Line:	next_line
 
 
 
@@ -1680,12 +1637,12 @@ Next_Line::	next_line
 ;
 ; 11/29/95 10:21AM - ST
 ;
-		;align	32
+		align	32 ;not in td...
 
-Single_Line_Trans::
+Single_Line_Trans:
 		prologue
 
-Single_Line_Trans_Entry::
+Single_Line_Trans_Entry:
 
 slt_mask_map_lp:				; Pentium pipeline usage
 						;Pipe	Cycles
@@ -1705,7 +1662,7 @@ slt_not_trans:mov	[edi],al		;u 	1
 slt_end_line:	epilogue
 		next_line
 
-		;align	32
+		align	32
 
 slt_skip:	inc	edi
 		dec	ecx
@@ -1723,7 +1680,7 @@ slt_skip:	inc	edi
 		epilogue
 		next_line
 
-		;align	32
+		align	32
 
 slt_skip2:	inc	edi
 		dec	ecx
@@ -1762,7 +1719,7 @@ slt_skip_end_line:
 ; We have to align the destination for cards that dont bankswitch correctly
 ; when you write non-aligned data.
 ;
-		;align	32
+		align	32
 Long_Single_Line_Copy:
 		prologue
 
@@ -1797,7 +1754,7 @@ proc_out:		epilogue
 ;
 ; 11/29/95 10:21AM - ST
 ;
-		;align	32
+		align	32
 Short_Single_Line_Copy:
 		prologue
 		cmp	ecx,16
@@ -1815,7 +1772,7 @@ Short_Single_Line_Copy:
 ; 11/29/95 10:21AM - ST
 ;
 
-		;align	32
+		align	32
 Single_Line_Skip:
 		prologue
 		add	esi,ecx
@@ -1830,7 +1787,7 @@ Single_Line_Skip:
 ;
 ; 11/29/95 10:21AM - ST
 ;
-		;align	32
+		align	32
 Single_Line_Ghost:
 
 		prologue
@@ -1863,7 +1820,7 @@ slg_store_pixel:
 ;
 ; 11/29/95 10:21AM - ST
 ;
-		;align	32
+		align	32
 Single_Line_Ghost_Trans:
 		prologue
 		xor	eax,eax
@@ -1895,7 +1852,7 @@ slgt_store_pixel:
 		next_line
 
 
-		;align	32
+		align	32
 
 slgt_transparent:
 		inc	edi		;1
@@ -1923,7 +1880,7 @@ slgt_out:	epilogue
 ;
 ; Optimised video memory access version
 ;
-		;align 	32
+		align 	32
 
 slgt4:        push	edx
 		mov	edx,[edi]
@@ -1976,7 +1933,7 @@ slgt4_trans1:	ror	edx,8
 ;
 ; 11/29/95 10:21AM - ST
 ;
-		;align	32
+		align	32
 
 Single_Line_Fading:
 		prologue
@@ -2011,7 +1968,7 @@ slf_fade_loop:mov	al,[ebx+eax]
 ;
 ; 11/29/95 10:21AM - ST
 ;
-		;align	32
+		align	32 ;not in td...
 
 Single_Line_Fading_Trans:
 		prologue
@@ -2053,7 +2010,7 @@ slft_transparent:
 ;
 ; 11/29/95 10:21AM - ST
 ;
-		;align	32
+		align	32
 
 Single_Line_Single_Fade:
 		prologue
@@ -2078,7 +2035,7 @@ slsf_loop:	mov	al,[esi]
 ;
 ; 11/29/95 10:21AM - ST
 ;
-		;align	32
+		align	32
 
 Single_Line_Single_Fade_Trans:
 		prologue
@@ -2097,7 +2054,7 @@ slsft_loop:	mov	al,[esi]
 		epilogue
 		next_line
 
-		;align	32
+		align	32
 
 slsft_transparent:
 		inc	edi
@@ -2127,7 +2084,7 @@ slsft_next_line:
 ;
 ; 11/29/95 10:21AM - ST
 ;
-		;align	32
+		align	32
 
 Single_Line_Ghost_Fading:
 
@@ -2171,7 +2128,7 @@ slgf_fade_loop:
 ;
 ; 11/29/95 10:21AM - ST
 ;
-		;align	32
+		align	32
 
 Single_Line_Ghost_Fading_Trans:
 		prologue
@@ -2215,7 +2172,7 @@ slgft_trans_pixel:
 		next_line
 
 
-		;align	32
+		align	32
 
 slgft4:	push	edx
 		mov	edx,[edi]
@@ -2268,7 +2225,7 @@ slgft4_out:	epilogue
 ;
 ; 11/29/95 10:21AM - ST
 ;
-		;align	32
+		align	32
 
 Single_Line_Predator:
 
@@ -2287,9 +2244,9 @@ slp_loop:	mov	al,[esi]
 slp_get_pred:	xor	bh , bh
 		mov	eax,[BFPredOffset]
 		mov	[BFPartialCount] , ebx
-		add	byte ptr [BFPredOffset],2
-		mov	eax, dword ptr [BFPredTable+eax]
-		and	byte ptr [BFPredOffset],PRED_MASK
+		add	[byte ptr BFPredOffset],2
+		mov	eax, [dword ptr BFPredTable+eax]
+		and	[byte ptr BFPredOffset],PRED_MASK
 		and	eax,0ffffh
 
 		mov	al,[edi+eax]
@@ -2313,7 +2270,7 @@ slp_skip_pixel:
 ;
 ; 11/29/95 10:21AM - ST
 ;
-		;align	32
+		align	32
 
 Single_Line_Predator_Trans:
 
@@ -2335,9 +2292,9 @@ slpt_loop:	mov	al,[esi]
 slpt_get_pred:xor	bh , bh
 		mov	eax,[BFPredOffset]
 		mov	[BFPartialCount] , ebx
-		add	byte ptr [BFPredOffset],2
-		mov	eax,dword ptr [BFPredTable+eax]
-		and	byte ptr [BFPredOffset ] , PRED_MASK
+		add	[byte ptr BFPredOffset],2
+		mov	eax,[dword ptr BFPredTable+eax]
+		and	[byte ptr BFPredOffset ] , PRED_MASK
 		and	eax,0ffffh
 
 		mov	al,[edi+eax]
@@ -2358,7 +2315,7 @@ slpt_skip_pixel:
 ;
 ; 11/29/95 10:21AM - ST
 ;
-		;align	32
+		align	32
 
 Single_Line_Predator_Ghost:
 
@@ -2377,9 +2334,9 @@ slpg_get_pred:
 		xor	bh,bh
 		mov	eax,[BFPredOffset]
 		mov	[BFPartialCount],ebx
-		add	byte ptr [BFPredOffset],2
-		mov	eax,dword ptr [BFPredTable+eax ]
-		and	byte ptr [BFPredOffset],PRED_MASK
+		add	[byte ptr BFPredOffset],2
+		mov	eax,[dword ptr BFPredTable+eax ]
+		and	[byte ptr BFPredOffset],PRED_MASK
 		and	eax,0ffffh
 		mov	al,[edi+eax]
 
@@ -2415,7 +2372,7 @@ slpg_store_pixel:
 ;
 ; 11/29/95 10:21AM - ST
 ;
-		;align	32
+		align	32
 
 Single_Line_Predator_Ghost_Trans:
 		prologue
@@ -2437,9 +2394,9 @@ slpgt_get_pred:
 		xor	bh,bh
 		mov	eax,[BFPredOffset]
 		mov	[BFPartialCount],ebx
-		add	byte ptr [BFPredOffset],2
-		mov	eax,dword ptr [BFPredTable+eax ]
-		and	byte ptr [BFPredOffset],PRED_MASK
+		add	[byte ptr BFPredOffset],2
+		mov	eax,[dword ptr BFPredTable+eax ]
+		and	[byte ptr BFPredOffset],PRED_MASK
 		and	eax,0ffffh
 		mov	al,[edi+eax]
 
@@ -2475,7 +2432,7 @@ slpgt_transparent:
 ;
 ; 11/29/95 10:21AM - ST
 ;
-		;align	32
+		align	32
 
 Single_Line_Predator_Fading:
 
@@ -2495,9 +2452,9 @@ slpf_loop:	mov	al,[esi]
 slpf_get_pred:xor	bh,bh
 		mov	eax,[BFPredOffset]
 		mov	[BFPartialCount],ebx
-		and	byte ptr [BFPredOffset],2
-		mov	eax,dword ptr [BFPredTable+eax]
-		and	byte ptr [BFPredOffset],PRED_MASK
+		and	[byte ptr BFPredOffset],2
+		mov	eax,[dword ptr BFPredTable+eax]
+		and	[byte ptr BFPredOffset],PRED_MASK
 
 		and	eax,0ffffh
 		mov	al,[eax+edi]
@@ -2528,7 +2485,7 @@ slpf_fade_loop:
 ;
 ; 11/29/95 10:21AM - ST
 ;
-		;align	32
+		align	32 ;not in td...
 
 Single_Line_Predator_Fading_Trans:
 		prologue
@@ -2550,9 +2507,9 @@ slpft_get_pred:
 		xor	bh,bh
 		mov	eax,[BFPredOffset]
 		mov	[BFPartialCount],ebx
-		and	byte ptr [BFPredOffset],2
-		mov	eax,dword ptr [BFPredTable+eax]
-		and	byte ptr [BFPredOffset],PRED_MASK
+		and	[byte ptr BFPredOffset],2
+		mov	eax,[dword ptr BFPredTable+eax]
+		and	[byte ptr BFPredOffset],PRED_MASK
 
 		and	eax,0ffffh
 		mov	al,[eax+edi]
@@ -2584,7 +2541,7 @@ slpft_transparent:
 ;
 ; 11/29/95 10:21AM - ST
 ;
-		;align	32
+		align	32
 
 Single_Line_Predator_Ghost_Fading:
 
@@ -2605,9 +2562,9 @@ slpgf_get_pred:
 		xor	bh,bh
 		mov	eax,[BFPredOffset]
 		mov	[BFPartialCount],ebx
-		add	byte ptr [BFPredOffset],2
-		mov	eax,dword ptr [BFPredTable+eax]
-		and	byte ptr [BFPredOffset],PRED_MASK
+		add	[byte ptr BFPredOffset],2
+		mov	eax,[dword ptr BFPredTable+eax]
+		and	[byte ptr BFPredOffset],PRED_MASK
 		and	eax,0ffffh
 
 		mov	al,[edi+eax]
@@ -2653,7 +2610,7 @@ slpgf_store_pixel:
 ;
 ; 11/29/95 10:21AM - ST
 ;
-		;align	32
+		align	32
 
 Single_Line_Predator_Ghost_Fading_Trans:
 
@@ -2677,9 +2634,9 @@ slpgft_get_pred:
 		xor	bh,bh
 		mov	eax,[BFPredOffset]
 		mov	[BFPartialCount],ebx
-		add	byte ptr [BFPredOffset],2
-		mov	eax,dword ptr [BFPredTable+eax]
-		and	byte ptr [BFPredOffset],PRED_MASK
+		add	[byte ptr BFPredOffset],2
+		mov	eax,[dword ptr BFPredTable+eax]
+		and	[byte ptr BFPredOffset],PRED_MASK
 		and	eax,0ffffh
 
 		mov	al,[edi+eax]
@@ -2722,9 +2679,9 @@ slpgft_transparent:
 
 
 
-;		ends		;end of strict alignment segment
+		ends		;end of strict alignment segment
 
-;	       	codeseg
+	       	codeseg
 
 
 
@@ -2792,7 +2749,7 @@ BF_Ghost:
 	; get length of the 32 groups of instructions
 
 	lea	ecx, [offset ghost_reference]
-	sub	ecx, [offset ghost_line]
+	;sub	ecx, [offset ghost_line]
 
 	shr	ebx , 5				; width / 32
 	shr	ecx , 5				; length of instructions / 32
@@ -2815,7 +2772,7 @@ ghost_line:
 		mov	al , [ esi ]
 		inc	esi
 		mov	ebx , [ IsTranslucent ]		; is it a translucent color?
-		mov	bh , BYTE PTR [ ebx + eax ]
+		mov	bh , [ BYTE PTR ebx + eax ]
 		cmp	bh , 0ffh
 		je	store_pixel
 
@@ -2825,7 +2782,7 @@ ghost_line:
 		mov	al , [ edi ]			; mov pixel at destination to al
 		add	ebx , [ Translucent ]		; get the ptr to it!
 							; Add the (trans_color * 256) of the translation equ.
-		mov	al , BYTE PTR [ ebx + eax ]	; get new pixel in al
+		mov	al , [ BYTE PTR ebx + eax ]	; get new pixel in al
 
 	store_pixel:
 		mov	[ edi ] , al
@@ -2861,7 +2818,7 @@ BF_Ghost_Trans:
 	; get length of the 32 groups of instructions
 
 	lea	ecx , [ offset ghost_t_reference ]
-	sub	ecx, [ offset ghost_t_line ]
+	;sub	ecx, [ offset ghost_t_line ]
 
 	shr	ebx , 5				; width / 32
 	shr	ecx , 5				; length of instructions / 32
@@ -2888,7 +2845,7 @@ ghost_t_line:
 		jz	transp_pixel
 
 		mov	ebx , [ IsTranslucent ]		; is it a translucent color?
-		mov	bh , BYTE PTR [ ebx + eax ]
+		mov	bh , [ BYTE PTR ebx + eax ]
 		cmp	bh , 0ffh
 		je	store_pixel
 
@@ -2898,7 +2855,7 @@ ghost_t_line:
 		mov	al , [ edi ]			; mov pixel at destination to al
 		add	ebx , [ Translucent ]		; get the ptr to it!
 							; Add the (trans_color * 256) of the translation equ.
-		mov	al , BYTE PTR [ ebx + eax ]	; get new pixel in al
+		mov	al , [ BYTE PTR ebx + eax ]	; get new pixel in al
 
 	store_pixel:
 		mov	[ edi ] , al
@@ -2936,7 +2893,7 @@ BF_Fading:
 	; get length of the 32 groups of instructions
 
 	lea	ecx , [ offset fading_reference ]
-	sub	ecx, [ offset fading_line ]
+	;sub	ecx, [ offset fading_line ]
 
 	shr	ebx , 5				; width / 32
 	shr	ecx , 5				; length of instructions / 32
@@ -2966,7 +2923,7 @@ fading_line:
 		mov	ecx , [ FadingNum ]
 
 	fade_loop:
-		mov	al, byte ptr [ebx + eax]
+		mov	al, [byte ptr ebx + eax]
 		dec	ecx
 		jnz	fade_loop
 
@@ -3004,7 +2961,7 @@ BF_Fading_Trans:
 	; get length of the 32 groups of instructions
 
 	lea	ecx , [ offset fading_t_reference ]
-	sub	ecx, [ offset fading_t_line ]
+	;sub	ecx, [ offset fading_t_line ]
 
 	shr	ebx , 5				; width / 32
 	shr	ecx , 5				; length of instructions / 32
@@ -3038,7 +2995,7 @@ fading_t_line:
 		mov	ecx , [ FadingNum ]
 
 	fade_loop:
-		mov	al, byte ptr [ebx + eax]
+		mov	al, [byte ptr ebx + eax]
 		dec	ecx
 		jnz	fade_loop
 
@@ -3078,7 +3035,7 @@ BF_Ghost_Fading:
 	; get length of the 32 groups of instructions
 
 	lea	ecx , [ offset ghost_f_reference ]
-	sub	ecx, [ offset ghost_f_line ]
+	;sub	ecx, [ offset ghost_f_line ]
 
 	shr	ebx , 5				; width / 32
 	shr	ecx , 5				; length of instructions / 32
@@ -3107,7 +3064,7 @@ ghost_f_line:
 		mov	al , [ esi ]
 		inc	esi
 		mov	ebx , [ IsTranslucent ]		; is it a lucent color?
-		mov	bh , byte ptr [ ebx + eax ]
+		mov	bh , [byte ptr ebx + eax ]
 		cmp	bh , 0ffh
 		je	do_fading
 
@@ -3117,7 +3074,7 @@ ghost_f_line:
 		mov	al , [ edi ]			; mov pixel at destination to al
 		add	ebx , [ Translucent ]		; get the ptr to it!
 							; Add the (_color * 256) of the lation equ.
-		mov	al , byte ptr [ ebx + eax ]	; get new pixel in al
+		mov	al , [byte ptr ebx + eax ]	; get new pixel in al
 ; DRD		jmp	store_pixel
 
 	do_fading:
@@ -3125,7 +3082,7 @@ ghost_f_line:
 		mov	ecx , [ FadingNum ]
 
 	fade_loop:
-		mov	al, byte ptr [ebx + eax]
+		mov	al, [byte ptr ebx + eax]
 		dec	ecx
 		jnz	fade_loop
 
@@ -3164,7 +3121,7 @@ BF_Ghost_Fading_Trans:
 	; get length of the 32 groups of instructions
 
 	lea	ecx , [ offset ghost_f_t_reference ]
-	sub	ecx, [ offset ghost_f_t_line ]
+	;sub	ecx, [ offset ghost_f_t_line ]
 
 	shr	ebx , 5				; width / 32
 	shr	ecx , 5				; length of instructions / 32
@@ -3197,7 +3154,7 @@ ghost_f_t_line:
 		jz	transp_pixel
 
 		mov	ebx , [ IsTranslucent ]		; is it a translucent color?
-		mov	bh , byte ptr [ ebx + eax ]
+		mov	bh , [byte ptr ebx + eax ]
 		cmp	bh , 0ffh
 		je	do_fading
 
@@ -3207,7 +3164,7 @@ ghost_f_t_line:
 		mov	al , [ edi ]			; mov pixel at destination to al
 		add	ebx , [ Translucent ]		; get the ptr to it!
 							; Add the (trans_color * 256) of the translation equ.
-		mov	al , byte ptr [ ebx + eax ]	; get new pixel in al
+		mov	al , [byte ptr ebx + eax ]	; get new pixel in al
 ; DRD		jmp	store_pixel
 
 	do_fading:
@@ -3215,7 +3172,7 @@ ghost_f_t_line:
 		mov	ecx , [ FadingNum ]
 
 	fade_loop:
-		mov	al, byte ptr [ebx + eax]
+		mov	al, [byte ptr ebx + eax]
 		dec	ecx
 		jnz	fade_loop
 
@@ -3256,7 +3213,7 @@ BF_Predator:
 	; get length of the 32 groups of instructions
 
 	lea	ecx , [ offset predator_reference ]
-	sub	ecx, [offset predator_line ]
+	;sub	ecx, [offset predator_line ]
 
 	shr	ebx , 5				; width / 32
 	shr	ecx , 5				; length of instructions / 32
@@ -3291,12 +3248,12 @@ predator_line:
 		xor	bh , bh
 		mov	eax, [ BFPredOffset ]
 		mov	[ BFPartialCount ] , ebx
-		add	BYTE PTR [ BFPredOffset ] , 2
-		movzx	eax , WORD PTR [ BFPredTable + eax ]
-		and	BYTE PTR [ BFPredOffset ] , PRED_MASK
+		add	[BYTE PTR BFPredOffset ] , 2
+		movzx	eax , [WORD PTR BFPredTable + eax ]
+		and	[BYTE PTR BFPredOffset ] , PRED_MASK
 						; pick up a color offset a pseudo-
 						;  random amount from the current
-		movzx	eax , BYTE PTR [ edi + eax ]	;  viewport address
+		movzx	eax , [BYTE PTR edi + eax ]	;  viewport address
 
 ;		xor	bh , bh
 ;		mov	eax , [ BFPredValue ]	; pick up a color offset a pseudo-
@@ -3339,7 +3296,7 @@ BF_Predator_Trans:
 	; get length of the 32 groups of instructions
 
 	lea	ecx , [ offset predator_t_reference ]
-	sub	ecx, [ offset predator_t_line ]
+	;sub	ecx, [ offset predator_t_line ]
 
 	shr	ebx , 5				; width / 32
 	shr	ecx , 5				; length of instructions / 32
@@ -3378,12 +3335,12 @@ predator_t_line:
 		xor	bh , bh
 		mov	eax, [ BFPredOffset ]
 		mov	[ BFPartialCount ] , ebx
-		add	BYTE PTR [ BFPredOffset ] , 2
-		movzx	eax , WORD PTR [ BFPredTable + eax ]
-		and	BYTE PTR [ BFPredOffset ] , PRED_MASK
+		add	[BYTE PTR BFPredOffset ] , 2
+		movzx	eax , [WORD PTR BFPredTable + eax ]
+		and	[BYTE PTR BFPredOffset ] , PRED_MASK
 						; pick up a color offset a pseudo-
 						;  random amount from the current
-		movzx	eax , BYTE PTR [ edi + eax ]	;  viewport address
+		movzx	eax , [BYTE PTR edi + eax ]	;  viewport address
 
 	store_pixel:
 		mov	[ edi ] , al
@@ -3421,7 +3378,7 @@ BF_Predator_Ghost:
 	; get length of the 32 groups of instructions
 
 	lea	ecx , [ offset predator_g_reference ]
-	sub	ecx, [ offset predator_g_line ]
+	;sub	ecx, [ offset predator_g_line ]
 
 	shr	ebx , 5				; width / 32
 	shr	ecx , 5				; length of instructions / 32
@@ -3457,16 +3414,16 @@ predator_g_line:
 		xor	bh , bh
 		mov	eax, [ BFPredOffset ]
 		mov	[ BFPartialCount ] , ebx
-		add	BYTE PTR [ BFPredOffset ] , 2
-		movzx	eax , WORD PTR [ BFPredTable + eax ]
-		and	BYTE PTR [ BFPredOffset ] , PRED_MASK
+		add	[BYTE PTR BFPredOffset ] , 2
+		movzx	eax , [WORD PTR BFPredTable + eax ]
+		and	[BYTE PTR BFPredOffset ] , PRED_MASK
 						; pick up a color offset a pseudo-
 						;  random amount from the current
-		movzx	eax , BYTE PTR [ edi + eax ]	;  viewport address
+		movzx	eax , [BYTE PTR edi + eax ]	;  viewport address
 
 	check_ghost:
 		mov	ebx , [ IsTranslucent ]		; is it a translucent color?
-		mov	bh , BYTE PTR [ ebx + eax ]
+		mov	bh , [BYTE PTR ebx + eax ]
 		cmp	bh , 0ffh
 		je	store_pixel
 
@@ -3476,7 +3433,7 @@ predator_g_line:
 		mov	al , [ edi ]			; mov pixel at destination to al
 		add	ebx , [ Translucent ]		; get the ptr to it!
 							; Add the (trans_color * 256) of the translation equ.
-		mov	al , BYTE PTR [ ebx + eax ]	; get new pixel in al
+		mov	al , [BYTE PTR ebx + eax ]	; get new pixel in al
 
 	store_pixel:
 		mov	[ edi ] , al
@@ -3512,7 +3469,7 @@ BF_Predator_Ghost_Trans:
 	; get length of the 32 groups of instructions
 
 	lea	ecx , [ offset predator_g_t_reference ]
-	sub	ecx, [ offset predator_g_t_line ]
+	;sub	ecx, [ offset predator_g_t_line ]
 
 	shr	ebx , 5				; width / 32
 	shr	ecx , 5				; length of instructions / 32
@@ -3552,16 +3509,16 @@ predator_g_t_line:
 		xor	bh , bh
 		mov	eax, [ BFPredOffset ]
 		mov	[ BFPartialCount ] , ebx
-		add	BYTE PTR [ BFPredOffset ] , 2
-		movzx	eax , WORD PTR [ BFPredTable + eax ]
-		and	BYTE PTR [ BFPredOffset ] , PRED_MASK
+		add	[BYTE PTR BFPredOffset ] , 2
+		movzx	eax , [WORD PTR BFPredTable + eax ]
+		and	[BYTE PTR BFPredOffset ] , PRED_MASK
 						; pick up a color offset a pseudo-
 						;  random amount from the current
-		movzx	eax , BYTE PTR [ edi + eax ]	;  viewport address
+		movzx	eax , [BYTE PTR edi + eax ]	;  viewport address
 
 	check_ghost:
 		mov	ebx , [ IsTranslucent ]		; is it a translucent color?
-		mov	bh , BYTE PTR [ ebx + eax ]
+		mov	bh , [BYTE PTR ebx + eax ]
 		cmp	bh , 0ffh
 		je	store_pixel
 
@@ -3571,7 +3528,7 @@ predator_g_t_line:
 		mov	al , [ edi ]			; mov pixel at destination to al
 		add	ebx , [ Translucent ]		; get the ptr to it!
 							; Add the (trans_color * 256) of the translation equ.
-		mov	al , BYTE PTR [ ebx + eax ]	; get new pixel in al
+		mov	al , [BYTE PTR ebx + eax ]	; get new pixel in al
 
 	store_pixel:
 		mov	[ edi ] , al
@@ -3609,7 +3566,7 @@ BF_Predator_Fading:
 	; get length of the 32 groups of instructions
 
 	lea	ecx , [ offset predator_f_reference ]
-	sub	ecx, [ offset predator_f_line ]
+	;sub	ecx, [ offset predator_f_line ]
 
 	shr	ebx , 5				; width / 32
 	shr	ecx , 5				; length of instructions / 32
@@ -3649,19 +3606,19 @@ predator_f_line:
 		xor	bh , bh
 		mov	eax, [ BFPredOffset ]
 		mov	[ BFPartialCount ] , ebx
-		add	BYTE PTR [ BFPredOffset ] , 2
-		movzx	eax , WORD PTR [ BFPredTable + eax ]
-		and	BYTE PTR [ BFPredOffset ] , PRED_MASK
+		add	[ BYTE PTR BFPredOffset ] , 2
+		movzx	eax , [ WORD PTR BFPredTable + eax ]
+		and	[ BYTE PTR BFPredOffset ] , PRED_MASK
 						; pick up a color offset a pseudo-
 						;  random amount from the current
-		movzx	eax , BYTE PTR [ edi + eax ]	;  viewport address
+		movzx	eax , [ BYTE PTR edi + eax ]	;  viewport address
 
 	do_fading:
 		mov	ebx , [ FadingTable ]		; run color through fading table
 		mov	ecx , [ FadingNum ]
 
 	fade_loop:
-		mov	al, byte ptr [ebx + eax]
+		mov	al, [byte ptr ebx + eax]
 		dec	ecx
 		jnz	fade_loop
 
@@ -3699,7 +3656,7 @@ BF_Predator_Fading_Trans:
 	; get length of the 32 groups of instructions
 
 	lea	ecx , [ offset predator_f_t_reference ]
-	sub	ecx, [ offset predator_f_t_line ]
+	;sub	ecx, [ offset predator_f_t_line ]
 
 	shr	ebx , 5				; width / 32
 	shr	ecx , 5				; length of instructions / 32
@@ -3743,19 +3700,19 @@ predator_f_t_line:
 		xor	bh , bh
 		mov	eax, [ BFPredOffset ]
 		mov	[ BFPartialCount ] , ebx
-		add	BYTE PTR [ BFPredOffset ] , 2
-		movzx	eax , WORD PTR [ BFPredTable + eax ]
-		and	BYTE PTR [ BFPredOffset ] , PRED_MASK
+		add	[ BYTE PTR BFPredOffset ] , 2
+		movzx	eax , [ WORD PTR BFPredTable + eax ]
+		and	[ BYTE PTR BFPredOffset ] , PRED_MASK
 						; pick up a color offset a pseudo-
 						;  random amount from the current
-		movzx	eax , BYTE PTR [ edi + eax ]	;  viewport address
+		movzx	eax , [ BYTE PTR edi + eax ]	;  viewport address
 
 	do_fading:
 		mov	ebx , [ FadingTable ]		; run color through fading table
 		mov	ecx , [ FadingNum ]
 
 	fade_loop:
-		mov	al, byte ptr [ebx + eax]
+		mov	al, [byte ptr ebx + eax]
 		dec	ecx
 		jnz	fade_loop
 
@@ -3795,7 +3752,7 @@ BF_Predator_Ghost_Fading:
 	; get length of the 32 groups of instructions
 
 	lea	ecx , [ offset predator_g_f_reference ]
-	sub	ecx, [ offset predator_g_f_line ]
+	;sub	ecx, [ offset predator_g_f_line ]
 
 	shr	ebx , 5				; width / 32
 	shr	ecx , 5				; length of instructions / 32
@@ -3837,16 +3794,16 @@ predator_g_f_line:
 		xor	bh , bh
 		mov	eax, [ BFPredOffset ]
 		mov	[ BFPartialCount ] , ebx
-		add	BYTE PTR [ BFPredOffset ] , 2
-		movzx	eax , WORD PTR [ BFPredTable + eax ]
-		and	BYTE PTR [ BFPredOffset ] , PRED_MASK
+		add	[ BYTE PTR BFPredOffset ] , 2
+		movzx	eax , [ WORD PTR BFPredTable + eax ]
+		and	[ BYTE PTR  BFPredOffset ] , PRED_MASK
 						; pick up a color offset a pseudo-
 						;  random amount from the current
-		movzx	eax , BYTE PTR [ edi + eax ]	;  viewport address
+		movzx	eax , [ BYTE PTR  edi + eax ]	;  viewport address
 
 	check_ghost:
 		mov	ebx , [ IsTranslucent ]		; is it a translucent color?
-		mov	bh , BYTE PTR [ ebx + eax ]
+		mov	bh , [ BYTE PTR ebx + eax ]
 		cmp	bh , 0ffh
 		je	do_fading
 
@@ -3856,7 +3813,7 @@ predator_g_f_line:
 		mov	al , [ edi ]			; mov pixel at destination to al
 		add	ebx , [ Translucent ]		; get the ptr to it!
 							; Add the (trans_color * 256) of the translation equ.
-		mov	al , BYTE PTR [ ebx + eax ]	; get new pixel in al
+		mov	al , [ BYTE PTR ebx + eax ]	; get new pixel in al
 ; DRD		jmp	store_pixel
 
 	do_fading:
@@ -3864,7 +3821,7 @@ predator_g_f_line:
 		mov	ecx , [ FadingNum ]
 
 	fade_loop:
-		mov	al, byte ptr [ebx + eax]
+		mov	al, [byte ptr ebx + eax]
 		dec	ecx
 		jnz	fade_loop
 
@@ -3903,7 +3860,7 @@ BF_Predator_Ghost_Fading_Trans:
 	; get length of the 32 groups of instructions
 
 	lea	ecx , [ offset predator_g_f_t_reference ]
-	sub	ecx, [ offset predator_g_f_t_line ]
+	;sub	ecx, [ offset predator_g_f_t_line ]
 
 	shr	ebx , 5				; width / 32
 	shr	ecx , 5				; length of instructions / 32
@@ -3949,16 +3906,16 @@ predator_g_f_t_line:
 		xor	bh , bh
 		mov	eax, [ BFPredOffset ]
 		mov	[ BFPartialCount ] , ebx
-		add	BYTE PTR [ BFPredOffset ] , 2
-		movzx	eax , WORD PTR [ BFPredTable + eax ]
-		and	BYTE PTR [ BFPredOffset ] , PRED_MASK
+		add	[BYTE PTR BFPredOffset ] , 2
+		movzx	eax , [WORD PTR BFPredTable + eax ]
+		and	[BYTE PTR BFPredOffset ] , PRED_MASK
 						; pick up a color offset a pseudo-
 						;  random amount from the current
-		movzx	eax , BYTE PTR [ edi + eax ]	;  viewport address
+		movzx	eax , [BYTE PTR  edi + eax ]	;  viewport address
 
 	check_ghost:
 		mov	ebx , [ IsTranslucent ]		; is it a translucent color?
-		mov	bh , BYTE PTR [ ebx + eax ]
+		mov	bh , [BYTE PTR ebx + eax ]
 		cmp	bh , 0ffh
 		je	do_fading
 
@@ -3968,7 +3925,7 @@ predator_g_f_t_line:
 		mov	al , [ edi ]			; mov pixel at destination to al
 		add	ebx , [ Translucent ]		; get the ptr to it!
 							; Add the (trans_color * 256) of the translation equ.
-		mov	al , BYTE PTR [ ebx + eax ]	; get new pixel in al
+		mov	al , [BYTE PTR ebx + eax ]	; get new pixel in al
 ; DRD		jmp	store_pixel
 
 	do_fading:
@@ -3976,7 +3933,7 @@ predator_g_f_t_line:
 		mov	ecx , [ FadingNum ]
 
 	fade_loop:
-		mov	al, byte ptr [ebx + eax]
+		mov	al, [byte ptr ebx + eax]
 		dec	ecx
 		jnz	fade_loop
 
@@ -4008,8 +3965,7 @@ predator_g_f_t_reference:
 Not_Supported:
 	ret
 
-Buffer_Frame_To_Page	ENDP	
+ENDP Buffer_Frame_To_Page
 
 
 end
-

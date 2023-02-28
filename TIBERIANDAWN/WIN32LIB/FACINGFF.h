@@ -68,7 +68,7 @@
 ;*   12/24/1991 JLB : Adapted.                                             *
 ;*=========================================================================*/
 
-int __cdecl Desired_Facing256(LONG srcx, LONG srcy, LONG dstx, LONG dsty);
+extern "C" int __cdecl Desired_Facing256(LONG srcx, LONG srcy, LONG dstx, LONG dsty);
 
 
 #if (0)
@@ -255,7 +255,7 @@ GLOBAL	 C Desired_Facing8	:NEAR
 ;*   02/06/1995 BWG : Convert to 32-bit                                    *
 ;*=========================================================================*
 */
-int __cdecl Desired_Facing8(long x1, long y1, long x2, long y2);
+extern "C" int __cdecl Desired_Facing8(long x1, long y1, long x2, long y2);
 
 #if (0)
 	PROC	Desired_Facing8 C near
@@ -386,7 +386,7 @@ NewFacing16	DB	 3, 2, 4,-1, 1, 2,0,-1
 ;*   08/14/1991 JLB : Created.                                             *
 ;*=========================================================================*
 */
-long __cdecl Desired_Facing16(long x1, long y1, long x2, long y2);
+extern "C" long __cdecl Desired_Facing16(long x1, long y1, long x2, long y2);
 	
 #if (0)
 	PROC	Desired_Facing16 C near

@@ -77,7 +77,7 @@
 /*
 ** New sidebar for GlyphX multiplayer. ST - 3/26/2019 12:24PM
 */
-#include "SidebarGlyphx.h"
+//#include "SidebarGlyphx.h"
 
 #define	FIXUP		0
 
@@ -755,7 +755,7 @@ void CellClass::Overlap_Down(ObjectClass * object)
 	} else {
 		
 		if (object->Is_Techno()) {
-			TechnoClass *tech = static_cast<TechnoClass*>(object);
+			TechnoClass *tech = (TechnoClass*)(object);
 			object->Revealed(tech->House);
 		} else {
 		
@@ -2243,7 +2243,7 @@ bool CellClass::Goodie_Check(FootClass * object)
 						// Add to Glyphx multiplayer sidebar. ST - 3/22/2019 1:50PM
 						if (GameToPlay == GAME_GLYPHX_MULTIPLAYER) {
 							if (object->House->IsHuman) {
-								Sidebar_Glyphx_Add(RTTI_SPECIAL, SPC_NUCLEAR_BOMB, object->House);
+								//Sidebar_Glyphx_Add(RTTI_SPECIAL, SPC_NUCLEAR_BOMB, object->House);
 							}
 						} else {
 							if (object->IsOwnedByPlayer) {
@@ -2263,7 +2263,7 @@ bool CellClass::Goodie_Check(FootClass * object)
 						// Add to Glyphx multiplayer sidebar. ST - 3/22/2019 1:50PM
 						if (GameToPlay == GAME_GLYPHX_MULTIPLAYER) {
 							if (object->House->IsHuman) {
-								Sidebar_Glyphx_Add(RTTI_SPECIAL, SPC_ION_CANNON, object->House);
+								//Sidebar_Glyphx_Add(RTTI_SPECIAL, SPC_ION_CANNON, object->House);
 							}
 						} else {
 							if (object->IsOwnedByPlayer) {
@@ -2283,7 +2283,7 @@ bool CellClass::Goodie_Check(FootClass * object)
 						// Add to Glyphx multiplayer sidebar. ST - 3/22/2019 1:50PM
 						if (GameToPlay == GAME_GLYPHX_MULTIPLAYER) {
 							if (object->House->IsHuman) {
-								Sidebar_Glyphx_Add(RTTI_SPECIAL, SPC_AIR_STRIKE, object->House);
+								//Sidebar_Glyphx_Add(RTTI_SPECIAL, SPC_AIR_STRIKE, object->House);
 							}
 						} else {
 							if (object->IsOwnedByPlayer) {

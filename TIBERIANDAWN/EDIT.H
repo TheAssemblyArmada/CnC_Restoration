@@ -96,18 +96,9 @@ class EditClass : public ControlClass
 
 };
 
-//inline EditClass::EditStyle operator |(EditClass::EditStyle, EditClass::EditStyle);
-//inline EditClass::EditStyle operator &(EditClass::EditStyle, EditClass::EditStyle);
-//inline EditClass::EditStyle operator ~(EditClass::EditStyle);
-
-inline EditClass::EditStyle operator|(EditClass::EditStyle a, EditClass::EditStyle b)
-{return static_cast<EditClass::EditStyle>(static_cast<int>(a) | static_cast<int>(b));}
-
-inline EditClass::EditStyle operator&(EditClass::EditStyle a, EditClass::EditStyle b)
-{return static_cast<EditClass::EditStyle>(static_cast<int>(a) & static_cast<int>(b));}
-
-inline EditClass::EditStyle operator~(EditClass::EditStyle a)
-{return static_cast<EditClass::EditStyle>(~static_cast<int>(a));}
+inline EditClass::EditStyle operator |(EditClass::EditStyle, EditClass::EditStyle);
+inline EditClass::EditStyle operator &(EditClass::EditStyle, EditClass::EditStyle);
+inline EditClass::EditStyle operator ~(EditClass::EditStyle);
 
 
 #endif

@@ -241,9 +241,9 @@ bool Read_Scenario(char *root)
 		char message[200];
 		if (root) {
 			sprintf(message, "Failed to load scenario %s", root);
-			GlyphX_Debug_Print(message);
+			//GlyphX_Debug_Print(message);
 		} else {
-			GlyphX_Debug_Print("Failed to load scenario");
+			//GlyphX_Debug_Print("Failed to load scenario");
 		}
 #else		  
 		Fade_Palette_To(GamePalette, FADE_PALETTE_FAST, Call_Back);
@@ -356,7 +356,7 @@ void Clear_Scenario(void)
 
 	Base.Init();
 
-	CurrentObject.Clear_All();
+	//CurrentObject.Clear_All();
 
 	Invalidate_Cached_Icons();
 }
@@ -514,7 +514,7 @@ void Do_Win(void)
 		}
 
 		if ( (Special.IsJurassic && AreThingiesEnabled) && Scenario == 5) {
-			Prog_End("Do_Win - Last Jurassic mission complete");
+			Prog_End();
 			if (!RunningAsDLL) {
 				exit(0);
 			}

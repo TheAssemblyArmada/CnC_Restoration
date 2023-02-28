@@ -738,7 +738,7 @@ void __cdecl SetPalette(unsigned char *palette,long,unsigned long)
  *=============================================================================================*/
 void Memory_Error_Handler(void)
 {
-	GlyphX_Debug_Print("Error - out of memory.");
+	//GlyphX_Debug_Print("Error - out of memory.");
 	VisiblePage.Clear();
 	Set_Palette(GamePalette);
 	while (Get_Mouse_State()){Show_Mouse();};

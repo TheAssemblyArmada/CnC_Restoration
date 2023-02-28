@@ -144,7 +144,7 @@ class DriveClass : public FootClass
 		**	Smooth turning tracks are controlled by this structure and these
 		**	processing bits.
 		*/
-		typedef enum TrackControlType : unsigned char {
+		typedef enum TrackControlType {
 			F_=0x00,		// No translation necessary?
 			F_T=0x01,	// Transpose X and Y components?
 			F_X=0x02,	// Reverse X component sign?

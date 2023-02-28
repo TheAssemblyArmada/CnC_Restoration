@@ -19,7 +19,7 @@
 ;
 ; Macro to fetch the header of the next line and jump to the appropriate routine
 ;
-next_line	macro
+macro next_line	
 
 		add	edi,[dest_adjust_width]		;add in dest modulo
 		dec	edx				;line counter
@@ -36,4 +36,3 @@ next_line	macro
 		jmp	[dword eax]			;do the jump
 
 		endm
-

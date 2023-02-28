@@ -64,7 +64,7 @@ BOOL CC95AlreadyRunning = FALSE;		//Was there an instance of C&C 95 already runn
 
 extern HWND 			MainWindow;
 extern TimerClass	GameTimer;
-extern bool			GameTimerInUse;
+//extern bool			GameTimerInUse;
 extern void 			CCDebugString (char *string);
 
 
@@ -273,11 +273,11 @@ BOOL DDEServerClass::Callback(unsigned char *data, long length)
 
 			case DDE_PACKET_HEART_BEAT:
 				CCDebugString("C&C95 - Received heart beat packet.");
-				if (GameTimerInUse){
-					LastHeartbeat = GameTimer.Time();
-				}else{
-					LastHeartbeat = 0;
-				}
+				//if (GameTimerInUse){
+				//	LastHeartbeat = GameTimer.Time();
+				//}else{
+				//	LastHeartbeat = 0;
+				//}
 				break;
 
 			default:

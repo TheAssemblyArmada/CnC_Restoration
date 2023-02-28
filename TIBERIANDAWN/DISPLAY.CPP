@@ -136,7 +136,7 @@ extern MixFileClass *TheaterIcons;
 
 //Added for getting the input for special character keys from the client 
 // - 6/26/2019 JAS 
-extern bool DLL_Export_Get_Input_Key_State(KeyNumType key);
+//extern bool DLL_Export_Get_Input_Key_State(KeyNumType key);
 
 
 /***********************************************************************************************
@@ -1802,7 +1802,7 @@ bool DisplayClass::Map_Cell(CELL cell, HouseClass * house, bool and_for_allies)
 	if (house == NULL || cell >= (CELL)Size) return(false);
 
 	if (!house->IsHuman) {
-		if (!ShareAllyVisibility || !and_for_allies) {
+		if (/*!ShareAllyVisibility ||*/ !and_for_allies) {
 			return false;
 		}
 	}
@@ -1810,7 +1810,7 @@ bool DisplayClass::Map_Cell(CELL cell, HouseClass * house, bool and_for_allies)
 	/*
 	** Maybe also recurse to map for allies
 	*/
-	if (ShareAllyVisibility && and_for_allies && GameToPlay == GAME_GLYPHX_MULTIPLAYER) {
+	if (/*ShareAllyVisibility &&*/ and_for_allies && GameToPlay == GAME_GLYPHX_MULTIPLAYER) {
 		for (HousesType house_type = HOUSE_MULTI1; house_type < HOUSE_COUNT; house_type++) {
 			HouseClass *hptr = HouseClass::As_Pointer(house_type);
 			if (hptr && hptr->IsActive) {
@@ -3025,7 +3025,7 @@ void DisplayClass::Select_These(COORDINATE coord1, COORDINATE coord2, bool addit
 				int count_before = CurrentObject.Count();
 				CurrentObject[i]->Unselect();
 				if (count_before <= CurrentObject.Count()) {
-					GlyphX_Debug_Print("Select_These failed to remove an object");
+					//GlyphX_Debug_Print("Select_These failed to remove an object");
 					CurrentObject.Delete(CurrentObject[i]);
 				}
 				--i;
@@ -3049,7 +3049,7 @@ void DisplayClass::Select_These(COORDINATE coord1, COORDINATE coord2, bool addit
 					int count_before = CurrentObject.Count();
 					CurrentObject[i]->Unselect();
 					if (count_before <= CurrentObject.Count()) {
-						GlyphX_Debug_Print("Select_These failed to remove an object");
+						//GlyphX_Debug_Print("Select_These failed to remove an object");
 						CurrentObject.Delete(CurrentObject[i]);
 					}
 					--i;
@@ -3201,9 +3201,9 @@ int DisplayClass::TacticalClass::Action(unsigned flags, KeyNumType & key)
 		*/
 		if (CurrentObject.Count()) {
 			if (object) {
-				action = Best_Object_Action(object);
+				//action = Best_Object_Action(object);
 			} else {
-				action = Best_Object_Action(cell);
+				//action = Best_Object_Action(cell);
 			}
 		} else {
 			if (object && object->Class_Of().IsSelectable) {
@@ -3378,16 +3378,16 @@ int DisplayClass::TacticalClass::Selection_At_Mouse(unsigned flags, KeyNumType &
 
 		if (object != nullptr)
 		{
-			bool shiftdown = DLL_Export_Get_Input_Key_State(KN_LSHIFT);
+			//bool shiftdown = DLL_Export_Get_Input_Key_State(KN_LSHIFT);
 
-			if (shiftdown)
-			{
-				Map.Mouse_Left_Release(cell, x, y, object, ACTION_TOGGLE_SELECT);
-			}
-			else
-			{
-				Map.Mouse_Left_Release(cell, x, y, object, ACTION_SELECT);
-			}
+			//if (shiftdown)
+			//{
+			//	Map.Mouse_Left_Release(cell, x, y, object, ACTION_TOGGLE_SELECT);
+			//}
+			//else
+			//{
+			//	Map.Mouse_Left_Release(cell, x, y, object, ACTION_SELECT);
+			//}
 
 		}
 		else
@@ -3458,10 +3458,10 @@ int DisplayClass::TacticalClass::Command_Object(unsigned flags, KeyNumType & key
 
 		if (CurrentObject.Count()) {
 			if (object) {
-				action = Best_Object_Action(object);
+				//action = Best_Object_Action(object);
 			}
 			else {
-				action = Best_Object_Action(cell);
+				//action = Best_Object_Action(cell);
 			}
 		}
 
@@ -4002,7 +4002,7 @@ void DisplayClass::Mouse_Left_Held(int x, int y)
 
 
 // Needed to accomodate Glyphx client sidebar. ST - 4/12/2019 5:29PM
-extern int GlyphXClientSidebarWidthInLeptons;
+//extern int GlyphXClientSidebarWidthInLeptons;
 
 /***********************************************************************************************
  * DisplayClass::Set_Tactical_Position -- Sets the tactical view position.                     *
@@ -4024,10 +4024,10 @@ void DisplayClass::Set_Tactical_Position(COORDINATE coord)
 	/*
 	**	Bound the desired location to fit the legal map edges.
 	*/
-	int xx = 0;// Coord_X(coord) - Cell_To_Lepton(MapCellX);
-	int yy = 0;// Coord_Y(coord) - Cell_To_Lepton(MapCellY);
+	int xx = Coord_X(coord) - Cell_To_Lepton(MapCellX);
+	int yy = Coord_Y(coord) - Cell_To_Lepton(MapCellY);
 
-	Confine_Rect(&xx, &yy, TacLeptonWidth, TacLeptonHeight, Cell_To_Lepton(MapCellWidth) + GlyphXClientSidebarWidthInLeptons, Cell_To_Lepton(MapCellHeight));		// Needed to accomodate Glyphx client sidebar. ST - 4/12/2019 5:29PM
+	Confine_Rect(&xx, &yy, TacLeptonWidth, TacLeptonHeight, Cell_To_Lepton(MapCellWidth), Cell_To_Lepton(MapCellHeight));
 	coord = XY_Coord(xx + Cell_To_Lepton(MapCellX), yy + Cell_To_Lepton(MapCellY));
 
 	if (ScenarioInit) {
@@ -4321,87 +4321,4 @@ static int get_action_priority(ActionType action)
 		}
 	}
 	return INT_MAX;
-}
-
-template <typename T>
-static int index_of(const DynamicVectorClass<T*>& list, T* object)
-{
-	for (int i = 0; i < list.Count(); i++) {
-		if (list[i] == object) {
-			return i;
-		}
-	}
-	return -1;
-}
-
-template <typename T>
-static ObjectClass* Best_Object_With_ActionT(DynamicVectorClass<ObjectClass*>& objects, T subject)
-{
-	DynamicVectorClass<const ObjectTypeClass*> checked_types;
-
-	if (objects.Count()) {
-		int best_priority = INT_MAX;
-		ObjectClass* best_object = objects[0];
-		for (int i = 0; i < objects.Count(); ++i) {
-			ObjectClass* object = objects[i];
-			const ObjectTypeClass* type = &object->Class_Of();
-			if (index_of(checked_types, type) != -1) {
-				continue;
-			}
-			checked_types.Add(type);
-			ActionType action = object->What_Action(subject);
-			int priority = get_action_priority(action);
-			if (priority < best_priority) {
-				best_priority = priority;
-				best_object = object;
-				if (best_priority == 0) {
-					break;
-				}
-			}
-		}
-		return best_object;
-	}
-	return NULL;
-}
-
-ObjectClass* Best_Object_With_Action(DynamicVectorClass<ObjectClass*>& objects, ObjectClass* object)
-{
-	return Best_Object_With_ActionT(objects, object);
-}
-
-ObjectClass* Best_Object_With_Action(DynamicVectorClass<ObjectClass*>& objects, CELL cell)
-{
-	return Best_Object_With_ActionT(objects, cell);
-}
-
-ActionType Best_Object_Action(DynamicVectorClass<ObjectClass*>& objects, ObjectClass* object)
-{
-	ObjectClass* obj = Best_Object_With_Action(objects, object);
-	return (obj != NULL) ? obj->What_Action(object) : ACTION_NONE;
-}
-
-ActionType Best_Object_Action(DynamicVectorClass<ObjectClass*>& objects, CELL cell)
-{
-	ObjectClass* obj = Best_Object_With_Action(objects, cell);
-	return (obj != NULL) ? obj->What_Action(cell) : ACTION_NONE;
-}
-
-ObjectClass* Best_Object_With_Action(ObjectClass* object)
-{
-	return Best_Object_With_Action(CurrentObject.Raw(), object);
-}
-
-ObjectClass* Best_Object_With_Action(CELL cell)
-{
-	return Best_Object_With_Action(CurrentObject.Raw(), cell);
-}
-
-ActionType Best_Object_Action(ObjectClass* object)
-{
-	return Best_Object_Action(CurrentObject.Raw(), object);
-}
-
-ActionType Best_Object_Action(CELL cell)
-{
-	return Best_Object_Action(CurrentObject.Raw(), cell);
 }

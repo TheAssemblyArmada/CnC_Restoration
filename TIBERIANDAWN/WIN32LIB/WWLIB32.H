@@ -44,7 +44,7 @@
 #include <tile.h>
 #include <wwmem.h>
 #include <keyboard.h>
-#include <mouse.h>
+#include <mouseww.h>
 #include <file.h>
 #include <rawfile.h>
 

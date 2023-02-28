@@ -1086,7 +1086,7 @@ bool Select_Game(bool fade)
 					if (cd_index == 2){
 						RequiredCD = 0;
 						if (!Force_CD_Available (RequiredCD)){
-							Prog_End("Select_Game - CD not found", true);
+							Prog_End();
 							exit(EXIT_FAILURE);
 						}
 					}

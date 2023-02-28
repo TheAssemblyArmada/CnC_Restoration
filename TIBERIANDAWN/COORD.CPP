@@ -398,48 +398,6 @@ COORDINATE Coord_Scatter(COORDINATE coord, unsigned distance, bool lock)
 	return(newcoord);
 }
 
-
-
-int __cdecl calcx(signed short param1, short distance)
-{
-	__asm {
-				  
-//#pragma aux calcx parm [ax] [bx] \
-	
-		movzx	eax, [param1]
-		mov	bx, [distance]
-		imul 	bx
-		shl	ax,1
-		rcl	dx,1
-		mov	al,ah
-		mov	ah,dl
-		cwd
-	}
-}
-
-
-int __cdecl calcy(signed short param1, short distance)
-{
-	__asm {
-				  
-//#pragma aux calcy parm [ax] [bx] \
-	
-		movzx	eax, [param1]
-		mov	bx, [distance]
-		imul bx
-		shl	ax,1
-		rcl	dx,1
-		mov	al,ah
-		mov	ah,dl
-		cwd
-		neg	eax
-	}
-}
-
-
-
-
-#if (0)
 extern int calcx(signed short, short distance);
 #pragma aux calcx parm [ax] [bx] \
 	modify [eax dx] \
@@ -463,8 +421,7 @@ extern int calcy(signed short, short distance);
 	"mov	ah,dl"					\
 	"cwd"								\
 	"neg	eax";
-//	"and	eax,0FFFFh"				
-#endif
+//	"and	eax,0FFFFh"		
 
 
 

@@ -1,18 +1,3 @@
-//
-// Copyright 2020 Electronic Arts Inc.
-//
-// TiberianDawn.DLL and RedAlert.dll and corresponding source code is free 
-// software: you can redistribute it and/or modify it under the terms of 
-// the GNU General Public License as published by the Free Software Foundation, 
-// either version 3 of the License, or (at your option) any later version.
-
-// TiberianDawn.DLL and RedAlert.dll and corresponding source code is distributed 
-// in the hope that it will be useful, but with permitted additional restrictions 
-// under Section 7 of the GPL. See the GNU General Public License in LICENSE.TXT 
-// distributed with this program. You should have received a copy of the 
-// GNU General Public License along with permitted additional restrictions 
-// with this program. If not, see https://github.com/electronicarts/CnC_Remastered_Collection
-
 /***************************************************************************
  **     C O N F I D E N T I A L --- W E S T W O O D   S T U D I O S       **
  ***************************************************************************
@@ -111,13 +96,13 @@ WinTimerClass::WinTimerClass (UINT freq, BOOL partial)
 	Frequency = freq;
 #endif
 
+	SysTicks = 0;
+	UserTicks = 0;
 
 	//
 	// Install the timer callback event handler
 	//
-	//TimerHandle = timeSetEvent ( 1000/freq , 1 , Timer_Callback , 0 , TIME_PERIODIC);				
-	// Add TIME_KILL_SYNCHRONOUS flag. ST - 2/13/2019 5:07PM
-	TimerHandle = timeSetEvent ( 1000/freq , 1 , Timer_Callback , 0 , TIME_PERIODIC | TIME_KILL_SYNCHRONOUS);
+	TimerHandle = timeSetEvent ( 1000/freq , 1 , Timer_Callback , 0 , TIME_PERIODIC);
 	TimerSystemOn = success = ( TimerHandle !=0 );
 
 	if (success)  {
@@ -152,7 +137,6 @@ WinTimerClass::~WinTimerClass( void )
 
 	if ( TimerHandle ){
 		timeKillEvent ( TimerHandle );
-		TimerHandle = 0;	//ST - 2/13/2019 5:12PM
 	}
 
 	TimerSystemOn = FALSE;
@@ -189,10 +173,9 @@ void CALLBACK Timer_Callback (UINT , UINT , DWORD , DWORD , DWORD)
 
 	InTimerCallback++;
 	
-	// Removed. ST - 2/13/2019 5:11PM
-	//if (!TimerThreadHandle){
-	//	DuplicateHandle (GetCurrentProcess(), GetCurrentThread() , GetCurrentProcess() ,&TimerThreadHandle , 0 , TRUE , DUPLICATE_SAME_ACCESS);
-	//}
+	if (!TimerThreadHandle){
+		DuplicateHandle (GetCurrentProcess(), GetCurrentThread() , GetCurrentProcess() ,&TimerThreadHandle , 0 , TRUE , DUPLICATE_SAME_ACCESS);
+	}
 
 
 	if (WindowsTimer) {

@@ -122,7 +122,7 @@
 
 //Added for getting the input for special character keys from the client 
 // - 6/26/2019 JAS 
-extern bool DLL_Export_Get_Input_Key_State(KeyNumType key);
+//extern bool DLL_Export_Get_Input_Key_State(KeyNumType key);
 
 
 /***************************************************************************
@@ -2506,48 +2506,48 @@ ActionType TechnoClass::What_Action(ObjectClass * object) const
 			return(ACTION_SELF);
 		}
 
-		//bool altdown = (Keyboard::Down(KN_LALT) || Keyboard::Down(KN_RALT));
-		//bool ctrldown = (Keyboard::Down(KN_LCTRL) || Keyboard::Down(KN_RCTRL));
-		//bool shiftdown = (Keyboard::Down(KN_LSHIFT) || Keyboard::Down(KN_RSHIFT));
+		bool altdown = (Keyboard::Down(KN_LALT) || Keyboard::Down(KN_RALT));
+		bool ctrldown = (Keyboard::Down(KN_LCTRL) || Keyboard::Down(KN_RCTRL));
+		bool shiftdown = (Keyboard::Down(KN_LSHIFT) || Keyboard::Down(KN_RSHIFT));
 		//Added for getting the input for special character keys from the client 
 		// - 6/26/2019 JAS 
-		bool altdown = DLL_Export_Get_Input_Key_State(KN_LALT);
-		bool ctrldown = DLL_Export_Get_Input_Key_State(KN_LCTRL);
-		bool shiftdown = DLL_Export_Get_Input_Key_State(KN_LSHIFT);
+		//bool altdown = DLL_Export_Get_Input_Key_State(KN_LALT);
+		//bool ctrldown = DLL_Export_Get_Input_Key_State(KN_LCTRL);
+		//bool shiftdown = DLL_Export_Get_Input_Key_State(KN_LSHIFT);
 
 		/*
 		**	Special guard area mission is possible if both the control and the
 		**	alt keys are held down.
 		*/
 		// Changed for multiplayer. ST - 3/13/2019 5:52PM
-		if (Is_Owned_By_Player() && ctrldown && altdown && Can_Player_Move() && Can_Player_Fire()) {
-		//if (IsOwnedByPlayer && ctrldown && altdown && Can_Player_Move() && Can_Player_Fire()) {
+		//if (Is_Owned_By_Player() && ctrldown && altdown && Can_Player_Move() && Can_Player_Fire()) {
+		if (IsOwnedByPlayer && ctrldown && altdown && Can_Player_Move() && Can_Player_Fire()) {
 			return(ACTION_GUARD_AREA);
 		}
 
 		/*
 		**	Special override to force a move regardless of what is occupying the location.
 		*/
-		if (altdown) {
+		//if (altdown) {
 			// Changed for multiplayer. ST - 3/13/2019 5:52PM
-			if (Is_Owned_By_Player() && Can_Player_Move()) {
+		//	if (Is_Owned_By_Player() && Can_Player_Move()) {
 			//if (IsOwnedByPlayer && Can_Player_Move()) {
-				return(ACTION_MOVE);
-			}
-		}
+		//		return(ACTION_MOVE);
+		//	}
+		//}
 
 		/*
 		**	Override so that toggled select state can be performed while the <SHIFT> key
 		**	is held down.
 		*/
 		bool is_a_loaner = object->Is_Techno() && ((TechnoClass*)object)->IsALoaner;
-		if (shiftdown) {
+		//if (shiftdown) {
 			// Changed for multiplayer. ST - 3/13/2019 5:52PM
-			if (!is_a_loaner) {
+		//	if (!is_a_loaner) {
 			//if (IsOwnedByPlayer && !IsALoaner) {
-				return(ACTION_TOGGLE_SELECT);
-			}
-		}
+		//		return(ACTION_TOGGLE_SELECT);
+		//	}
+		//}
 
 		/*
 		**	If firing is possible and legal, then return this action potential.
@@ -2607,14 +2607,14 @@ ActionType TechnoClass::What_Action(CELL cell) const
 	CellClass const * cellptr = &Map[cell];
 	OverlayTypeClass const * optr = NULL;
 
-	//bool ctrldown = Keyboard::Down(KN_LCTRL) || Keyboard::Down(KN_RCTRL);
-	//bool shiftdown = Keyboard::Down(KN_LSHIFT) || Keyboard::Down(KN_RSHIFT);
-	//bool altdown = (Keyboard::Down(KN_LALT) || Keyboard::Down(KN_RALT));
+	bool ctrldown = Keyboard::Down(KN_LCTRL) || Keyboard::Down(KN_RCTRL);
+	bool shiftdown = Keyboard::Down(KN_LSHIFT) || Keyboard::Down(KN_RSHIFT);
+    bool altdown = (Keyboard::Down(KN_LALT) || Keyboard::Down(KN_RALT));
 	//Added for getting the input for special character keys from the client 
 	// - 6/26/2019 JAS 
-	bool altdown = DLL_Export_Get_Input_Key_State(KN_LALT);
-	bool ctrldown = DLL_Export_Get_Input_Key_State(KN_LCTRL);
-	bool shiftdown = DLL_Export_Get_Input_Key_State(KN_LSHIFT);
+	//bool altdown = DLL_Export_Get_Input_Key_State(KN_LALT);
+	//bool ctrldown = DLL_Export_Get_Input_Key_State(KN_LCTRL);
+	//bool shiftdown = DLL_Export_Get_Input_Key_State(KN_LSHIFT);
 
 	/*
 	**	Disable recognizing the <CTRL> key forced fire option when dealing with buildings.
@@ -2977,7 +2977,7 @@ ResultType TechnoClass::Take_Damage(int & damage, int distance, WarheadType warh
 				if (object_type) {
 					RTTIType what = What_Am_I();
 					if (what == RTTI_AIRCRAFT || what == RTTI_INFANTRY || what == RTTI_UNIT) {
-						On_Achievement_Event(source->House, "UNIT_DESTROYED", object_type->IniName);
+						//On_Achievement_Event(source->House, "UNIT_DESTROYED", object_type->IniName);
 					}
 				}			
 			}

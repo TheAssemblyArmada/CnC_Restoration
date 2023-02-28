@@ -261,15 +261,6 @@ struct SoundEffectNameStruct {
 
 };
 
-
-//
-// External handlers. ST - 2/20/2019 3:41PM
-//
-extern void On_Sound_Effect(int sound_index, int variation, COORDINATE coord);
-// extern void On_Speech(int speech_index); // MBL 02.06.2020
-extern void On_Speech(int speech_index, HouseClass *house);
-extern void On_Ping(const HouseClass* player_ptr, COORDINATE coord);
-
 /***********************************************************************************************
  * Sound_Effect -- Plays a sound effect in the tactical map.                                   *
  *                                                                                             *
@@ -289,13 +280,7 @@ extern void On_Ping(const HouseClass* player_ptr, COORDINATE coord);
  *   01/05/1995 JLB : Reduces sound more dramatically when off screen.                         *
  *=============================================================================================*/
 void Sound_Effect(VocType voc, COORDINATE coord, int variation)
-{
-	//
-	// Intercept sound effect calls. ST - 2/20/2019 3:37PM
-	//
-	On_Sound_Effect((int)voc, variation, coord);
-			
-#if (0)			
+{		
 	unsigned			distance;
 	CELL				cell_pos;
 	int pan_value;
@@ -333,7 +318,6 @@ void Sound_Effect(VocType voc, COORDINATE coord, int variation)
 	}
 
 	Sound_Effect(voc, (VolType)Fixed_To_Cardinal(distance, Options.Volume), variation, pan_value);
-#endif
 }
 
 
@@ -519,26 +503,9 @@ static VoxType CurrentVoice = VOX_NONE;
  *=============================================================================================*/
 void Speak(VoxType voice, HouseClass *house, COORDINATE coord)
 {
-	// MBL 02.22.2019
-	if (voice == VOX_NONE)
-	{
-		return;
-	}
-
-	//
-	// Intercept speech calls. ST - 2/20/2019 3:37PM
-	//
-	// On_Speech((int)voice); // MBL 02.06.2020
-	On_Speech((int)voice, house);
-	if (coord) {
-		On_Ping(house, coord);
-	}
-
-#if (0)	
 	if (Options.Volume && SampleType != 0 && voice != VOX_NONE && voice != SpeakQueue && voice != CurrentVoice && SpeakQueue == VOX_NONE) {
 		SpeakQueue = voice;
 	}
-#endif
 }
 
 

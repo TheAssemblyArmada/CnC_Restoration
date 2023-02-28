@@ -183,7 +183,7 @@ MixFileClass::MixFileClass(char const *filename)
 	Filename = strdup(file.File_Name());
 
 	if (!Force_CD_Available(RequiredCD)) {
-		Prog_End("MixFileClass::MixFileClass CD not found", true);
+		Prog_End();
 		if (!RunningAsDLL) {
 			exit(EXIT_FAILURE);
 		}
